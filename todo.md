@@ -1,0 +1,2 @@
+- handle errors better
+- better server logging
