@@ -3,19 +3,28 @@
     border-color: black;
     border-width: 5px;
     border-radius: 3px;
+    padding: 20px;
+    margin: 20px;
+    height:20px;
 }
 
-.navbar li {
+ul.navbar li {
     display: inline;
+    padding: 20px;
+    position: relative;
 }
 
-.navbar-link a {
+a.navbar-link, a.navbar-link:visited, a.navbar-link:link {
     display: block;
     padding: 8px;
     text-decoration: none;
     color: black;
+    display: inline;
 }
 
-.navbar-link a:hover {
-    text-shadow: 3px;
+a.navbar-link:hover, a.navbar-link:active {
+    transition: all .2s ease-in;
+    text-shadow: 20px;
+    font-size: 110%;
+    color: darkgray;
 }
