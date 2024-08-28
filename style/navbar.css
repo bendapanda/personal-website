@@ -1,0 +1,21 @@
+.navbar {
+    border-style: solid;
+    border-color: black;
+    border-width: 5px;
+    border-radius: 3px;
+}
+
+.navbar li {
+    display: inline;
+}
+
+.navbar-link a {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: black;
+}
+
+.navbar-link a:hover {
+    text-shadow: 3px;
+}

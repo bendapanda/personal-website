@@ -16,6 +16,8 @@ func getMain(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	PORT := ":8080"
+	fs := http.FileServer(http.Dir("./style"))
+	http.Handle("/style/", http.StripPrefix("/style/", fs))
 
 	http.HandleFunc("/", getMain)
 
