@@ -48,7 +48,7 @@ func main() {
 	PORT := ":8080"
 	log.WithField("port", PORT).Info("Starting server on port " + PORT)
 
-	fs := http.FileServer(http.Dir("./style"))
+	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/style/", http.StripPrefix("/style/", fs))
 
 	http.HandleFunc("/", getMain)

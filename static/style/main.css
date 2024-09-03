@@ -24,6 +24,7 @@ body {
 
 #bio {
     flex: 3;
+    padding: 2em;
 }
 
 #photo {
