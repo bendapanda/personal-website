@@ -8,7 +8,7 @@ import (
 
 func InitLogging(loggingFile string) error {
 	log.SetOutput(os.Stdout)
-	log.SetFormatter(&log.JSONFormatter{})
+	log.SetFormatter(&log.TextFormatter{})
 
 	defaultLogger := "console"
 	if loggingFile != defaultLogger {
@@ -17,6 +17,7 @@ func InitLogging(loggingFile string) error {
 			return err
 		}
 		log.SetOutput(file)
+		log.SetFormatter(&log.JSONFormatter{})
 
 		return nil
 	}

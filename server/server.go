@@ -43,6 +43,8 @@ func main() {
 	log.Info("init server")
 
 	PORT := ":8080"
+	log.WithField("port", PORT).Info("Starting server on port " + PORT)
+
 	fs := http.FileServer(http.Dir("./style"))
 	http.Handle("/style/", http.StripPrefix("/style/", fs))
 
