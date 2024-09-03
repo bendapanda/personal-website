@@ -1,3 +1,4 @@
 *.jpeg
 test.txt
 todo.md
+go.sum
