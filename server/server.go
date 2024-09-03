@@ -19,6 +19,9 @@ func getMain(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("templates/index.html", "templates/navbar.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.WithFields(log.Fields{
+			"error": err.Error(),
+		}).Error("Something went wrong!")
 		return
 	}
 

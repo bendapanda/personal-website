@@ -5,6 +5,27 @@ body {
     font-style: normal;
 }
 
+.section {
+    border-style: solid;
+    border-color: black;
+    border-width: 5px;
+    border-radius: 3px;
+}
+
 #content {
     margin: 5%;
+}
+
+#about-me {
+    display: flex;
+    flex-direction: row;
+    column-gap: 30px;
+}
+
+#bio {
+    flex: 3;
+}
+
+#photo {
+    flex: 2;
 }
