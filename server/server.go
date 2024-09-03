@@ -16,7 +16,7 @@ func getMain(w http.ResponseWriter, r *http.Request) {
 
 	log.Info("fetching main")
 
-	t, err := template.ParseFiles("templates/index.html", "templates/navbar.html")
+	t, err := template.ParseFiles("templates/index.html", "templates/navbar.html", "templates/project.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		log.WithFields(log.Fields{

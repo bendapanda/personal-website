@@ -24,14 +24,15 @@
                     </p>
                 </div>
                 <div id="photo">
-                    <img src="static/resources/profile_pic.jpeg" alt="a pircure of me"> 
+                    <img src="static/resources/profile_pic.jpeg" alt="a pircure of me" class="section" style="border-style: none;"> 
                 </div>
             </div>
-            <div id="projects">
-
+            <div id="projects" class="section">
+                <h3>Favorite Projects</h3>
+                <div>{{template "project" . }}</div>
             </div>
-            <div id="comments">
-
+            <div id="comments" class="section">
+                <h3>Leave a review!</h3>
             </div>
         </div>
     </body>
