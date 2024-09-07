@@ -9,18 +9,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var temp = template.Must(template.ParseFiles("templates/index.html", "templates/navbar.html", "templates/project.html"))
+
 func GetLanding(w http.ResponseWriter, r *http.Request) {
 
 	log.Info("fetching main")
-
-	t, err := template.ParseFiles("templates/index.html", "templates/navbar.html", "templates/project.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		log.WithFields(log.Fields{
-			"error": err.Error(),
-		}).Error("Something went wrong!")
-		return
-	}
 
 	age := time.Now().Year() - 2004
 	if time.Now().Month() == time.January && time.Now().Day() < 5 {
@@ -32,5 +25,11 @@ func GetLanding(w http.ResponseWriter, r *http.Request) {
 	}{
 		fmt.Sprintf("%d", age),
 	}
-	t.Execute(w, MainInfo)
+	if err := temp.Execute(w, MainInfo); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.WithFields(log.Fields{
+			"error": err.Error(),
+		}).Error("Something went wrong!")
+		return
+	}
 }
