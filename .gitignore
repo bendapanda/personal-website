@@ -1,5 +1,5 @@
 *.jpeg
 test.txt
 todo.md
-env
+.env
 postgres

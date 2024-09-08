@@ -1,21 +1,36 @@
 package main
 
 import (
-	"flag"
 	"net/http"
+	"os"
 
 	handlers "server/server/handlers"
 
+	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 
+	db "server/server/db"
 	utils "server/server/utils"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	loggingFile := flag.String("loggingfile", "console", "the file for logs to be stored in")
-	flag.Parse()
+	// initialise environment variables
+	godotenv.Load()
 
-	utils.InitLogging(*loggingFile)
+	// initialise logging
+	loggingFile, exists := os.LookupEnv("LOG_FILE")
+	if !exists {
+		loggingFile = "console"
+	}
+
+	utils.InitLogging(loggingFile)
+
+	// set up database
+	db.InitProjectsTable()
+
+	// start router and server
 	log.Info("init server")
 	PORT := ":8080"
 	log.WithField("port", PORT).Info("Starting server on port " + PORT)
@@ -23,7 +38,8 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	http.HandleFunc("/", handlers.GetLanding)
+	router := mux.NewRouter()
+	router.HandleFunc("/", handlers.GetLanding)
 
-	log.Fatal(http.ListenAndServe(PORT, nil))
+	log.Fatal(http.ListenAndServe(PORT, router))
 }
