@@ -33,11 +33,25 @@ func InitDatabase() error {
 
 // fetches all projects in the database
 func GetAllProjects() ([]project, error) {
-
 	queryString := "SELECT * FROM projects"
 	rows, err := db.Query(queryString)
 	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	defer rows.Close()
 
+	var projects []project
+	for rows.Next() {
+		var proj project
+		if err := rows.Scan(&proj.name, &proj.description); err != nil {
+			return projects, err
+		}
+		projects = append(projects, proj)
 	}
 
+	if err = rows.Err(); err != nil {
+		return projects, err
+	}
+	return projects, nil
 }
