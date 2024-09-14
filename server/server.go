@@ -28,7 +28,7 @@ func main() {
 	utils.InitLogging(loggingFile)
 
 	// set up database
-	db.InitProjectsTable()
+	db.InitDatabase()
 
 	// start router and server
 	log.Info("init server")
