@@ -2,4 +2,4 @@
 test.txt
 todo.md
 .env
-postgres
+db_data
