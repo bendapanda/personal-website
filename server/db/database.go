@@ -6,33 +6,33 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var db *sql.DB
 
-type project struct {
-	name        string
-	description string
+type Project struct {
+	Name        string
+	Description string
 }
 
 // Initialises the database connection
 func InitDatabase() error {
-	postgres_username := os.Getenv("POSTGRES_USER")
-	postgres_password := os.Getenv("POSTGRES_PASSWORD")
-	postgres_url := "postgresql://" + postgres_username + ":" + postgres_password + "@localhost:5432?sslmode=disable"
+	database_url := os.Getenv("DATABASE_URL")
+	log.Info(database_url)
 	var err error
-	db, err = sql.Open("postgres", postgres_url)
+	db, err = sql.Open("sqlite3", database_url)
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
 
+	log.Info("Connected to database")
 	return nil
 }
 
 // fetches all projects in the database
-func GetAllProjects() ([]project, error) {
+func GetAllProjects() ([]Project, error) {
 	queryString := "SELECT * FROM projects"
 	rows, err := db.Query(queryString)
 	if err != nil {
@@ -41,10 +41,10 @@ func GetAllProjects() ([]project, error) {
 	}
 	defer rows.Close()
 
-	var projects []project
+	var projects []Project
 	for rows.Next() {
-		var proj project
-		if err := rows.Scan(&proj.name, &proj.description); err != nil {
+		var proj Project
+		if err := rows.Scan(&proj.Name, &proj.Description); err != nil {
 			return projects, err
 		}
 		projects = append(projects, proj)
