@@ -27,5 +27,4 @@ func TestGetAllProjectsNumberProjects(t *testing.T) {
 	if first_project.Name != "project 1" {
 		t.Error("expected project 1, got", first_project.Name)
 	}
-
 }
