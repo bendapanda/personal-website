@@ -7,7 +7,7 @@ import (
 )
 
 func initConnection() {
-	os.Setenv("DATABASE_URL", "./test/resources/test_db.db")
+	os.Setenv("DATABASE_URL", "resources/test_db.db")
 	db.InitDatabase()
 }
 

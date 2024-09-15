@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"os"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 
@@ -14,6 +15,9 @@ var db *sql.DB
 type Project struct {
 	Name        string
 	Description string
+	URL         string
+	Started     time.Time
+	Finished    sql.NullTime
 }
 
 // Initialises the database connection
@@ -44,7 +48,7 @@ func GetAllProjects() ([]Project, error) {
 	var projects []Project
 	for rows.Next() {
 		var proj Project
-		if err := rows.Scan(&proj.Name, &proj.Description); err != nil {
+		if err := rows.Scan(&proj.Name, &proj.Description, &proj.URL, &proj.Started, &proj.Finished); err != nil {
 			return projects, err
 		}
 		projects = append(projects, proj)
