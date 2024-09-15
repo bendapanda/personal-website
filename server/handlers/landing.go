@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"time"
 
+	db "server/server/db"
+
 	log "github.com/sirupsen/logrus"
 )
 
-var temp = template.Must(template.ParseFiles("templates/index.html", "templates/navbar.html", "templates/project.html"))
-
 func GetLanding(w http.ResponseWriter, r *http.Request) {
+	temp := template.Must(template.ParseFiles("templates/index.html", "templates/navbar.html", "templates/project.html"))
 
 	log.Info("fetching main")
 
@@ -20,11 +21,25 @@ func GetLanding(w http.ResponseWriter, r *http.Request) {
 		age -= 1
 	}
 
+	projects, err := db.GetAllProjects()
+	if err != nil {
+		log.Error(err.Error())
+		projects[0] = db.Project{
+			Name:        "Oops",
+			Description: "Sorry, something went wrong here.\n Looks like Ben needs to fix something...",
+			Started:     time.Now(),
+			URL:         "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+		}
+	}
+
 	MainInfo := struct {
-		Age string
+		Age      string
+		Projects []db.Project
 	}{
 		fmt.Sprintf("%d", age),
+		projects,
 	}
+
 	if err := temp.Execute(w, MainInfo); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		log.WithFields(log.Fields{

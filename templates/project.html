@@ -1,9 +1,11 @@
 {{define "project"}}
+    {{range .Projects}}
     <div class="project">
         <h3 class="project-title">{{  .Name  }}</h3>
-        <p class="dates">{{  .Started  }}-{{  .Finished | "present"}}</p>
+        <p class="dates">{{  .Started  }}-{{if .Finished}}{{  .Finished }}{{else}}present{{end}}</p>
         <p class="project-desc">{{ .Description  }}</p>
         <a href="project-link">{{  .URL  }}</a>
     </div>
+    {{end}}
 {{end}}
 
