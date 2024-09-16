@@ -35,10 +35,10 @@ func main() {
 	PORT := ":8080"
 	log.WithField("port", PORT).Info("Starting server on port " + PORT)
 
-	fs := http.FileServer(http.Dir("./static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-
 	router := mux.NewRouter()
+	fs := http.FileServer(http.Dir("./static"))
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
+
 	router.HandleFunc("/", handlers.GetLanding)
 
 	log.Fatal(http.ListenAndServe(PORT, router))
