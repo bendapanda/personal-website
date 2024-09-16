@@ -3,6 +3,7 @@ body {
     font-optical-sizing: auto;
     font-weight: 800;
     font-style: normal;
+    background-color: var(--whitebackground);
 }
 
 img {
@@ -11,7 +12,7 @@ img {
 
 .section {
     border-style: solid;
-    border-color: black;
+    border-color: var(--dark);
     border-width: 5px;
     border-radius: 3px;
 
@@ -41,11 +42,6 @@ img {
     row-gap: 1em;
 }
 
-#projects {
-    background-color: rgb(25, 21, 38);
-    color: white;
-}
-
 #bio {
     flex: 1;
     text-align: justify;
@@ -53,10 +49,39 @@ img {
 
 #silly-me {
     flex: 1;
-    background-color: red;
+    background-color: var(--blueaccent);
 }
 
 #photo {
     flex: 2;
     border-style: none;
+}
+
+#projects {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+}
+
+#projects-content {
+    display: flex;
+    flex-direction: row;
+    column-gap: 1em;
+}
+
+.project {
+    background-color: var(--blueaccent);
+    text-align: justify;
+    flex: 1;
+    max-width: 30%;
+    padding: 1em;
+}
+
+
+:root {
+    --bluedark: #1A1455;
+    --blueaccent: #add8e6;
+    --whitebackground: #F7F7F7;
+    --greyaccent:  #7F7F80;
+    --dark: #323232;
 }

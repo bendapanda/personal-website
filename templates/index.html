@@ -8,6 +8,7 @@
 
         <link href="static/style/main.css" rel="stylesheet">
         <link href="static/style/navbar.css" rel="stylesheet">
+        <link href="static/style/project.css" rel="stylesheet">
         
     </head>
     <body>
@@ -30,9 +31,9 @@
                     <img src="static/resources/profile_pic.jpeg" alt="a pircure of me" class="section" style="border-style: none;"> 
                 </div>
             </div>
-            <div id="projects" class="section">
+            <div id="projects">
                 <h3>Favorite Projects</h3>
-                <div>{{template "project" . }}</div>
+                <div id="projects-content">{{template "project" . }}</div>
             </div>
             <div id="comments" class="section">
                 <h3>Leave a review!</h3>
