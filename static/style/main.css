@@ -63,18 +63,33 @@ img {
     row-gap: 1em;
 }
 
+
 #projects-content {
-    display: flex;
-    flex-direction: row;
-    column-gap: 1em;
+    display: flex; 
+    column-gap: 1em;  
+    overflow-x: auto;  
+    white-space: nowrap; 
 }
 
 .project {
+    white-space: wrap;
     background-color: var(--blueaccent);
     text-align: justify;
+    display: flex;
+    flex-direction: row;
+    max-width: 800px;
+    padding: 2em;
+    flex-shrink: 0;
+    border-radius: 20px;
+}
+
+.project-left {
+    padding-right: 1em;
+    flex: 2;
+}
+
+.project-right {
     flex: 1;
-    max-width: 30%;
-    padding: 1em;
 }
 
 

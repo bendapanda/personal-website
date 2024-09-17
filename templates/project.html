@@ -7,7 +7,9 @@
             <p class="project-desc">{{ .Description  }}</p>
             <a href={{  .URL  }}>Project Link</a>
         </div>
-        <img src={{ .ImageFile}} alt="">
+        <div class="project-right">
+            <img src={{ .ImageFile}} alt="">
+        </div>
     </div>
     {{end}}
 {{end}}
