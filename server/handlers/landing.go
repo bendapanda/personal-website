@@ -27,7 +27,8 @@ func GetLanding(w http.ResponseWriter, r *http.Request) {
 		projects[0] = db.Project{
 			Name:        "Oops",
 			Description: "Sorry, something went wrong here.\n Looks like Ben needs to fix something...",
-			Started:     time.Now(),
+			Started:     "never",
+			Finished:    "never",
 			URL:         "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 		}
 	}

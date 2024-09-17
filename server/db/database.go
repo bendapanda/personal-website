@@ -16,8 +16,9 @@ type Project struct {
 	Name        string
 	Description string
 	URL         string
-	Started     time.Time
-	Finished    sql.NullTime
+	Started     string
+	Finished    string
+	ImageFile   string
 }
 
 // Initialises the database connection
@@ -48,9 +49,19 @@ func GetAllProjects() ([]Project, error) {
 	var projects []Project
 	for rows.Next() {
 		var proj Project
-		if err := rows.Scan(&proj.Name, &proj.Description, &proj.URL, &proj.Started, &proj.Finished); err != nil {
+		startTime := time.Now()
+		var endTime sql.NullTime
+
+		if err := rows.Scan(&proj.Name, &proj.Description, &proj.URL, &startTime, &endTime, &proj.ImageFile); err != nil {
 			return projects, err
 		}
+		proj.Started = startTime.Format(time.DateOnly)
+		if endTime.Valid {
+			proj.Finished = endTime.Time.Format(time.DateOnly)
+		} else {
+			proj.Finished = "present"
+		}
+
 		projects = append(projects, proj)
 	}
 

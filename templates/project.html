@@ -1,10 +1,13 @@
 {{define "project"}}
     {{range .Projects}}
     <div class="project">
-        <h3 class="project-title">{{  .Name  }}</h3>
-        <p class="dates">{{  .Started  }}-{{if .Finished}}{{  .Finished }}{{else}}present{{end}}</p>
-        <p class="project-desc">{{ .Description  }}</p>
-        <a href="project-link">{{  .URL  }}</a>
+        <div class="project-left">
+            <h3 class="project-title">{{  .Name  }}</h3>
+            <p class="dates">{{  .Started  }} to {{ .Finished }}</p>
+            <p class="project-desc">{{ .Description  }}</p>
+            <a href={{  .URL  }}>Project Link</a>
+        </div>
+        <img src={{ .ImageFile}} alt="">
     </div>
     {{end}}
 {{end}}
