@@ -25,7 +25,6 @@ img {
     margin-top: 2%;
     display: flex;
     flex-direction: column;
-    row-gap: 1em;
 }
 
 #about-me {
@@ -49,7 +48,7 @@ img {
 
 #silly-me {
     flex: 1;
-    background-color: var(--blueaccent);
+    transform: scale(90%) rotate(-10deg) translateY(-10%) scaleX(110%);
 }
 
 #photo {
@@ -61,9 +60,12 @@ img {
 #projects {
     display: flex;
     flex-direction: column;
-    row-gap: 1em;
-
     position: relative;
+}
+
+#projects-header {
+    position: absolute;
+    top: -20%;
 }
 
 
@@ -91,7 +93,8 @@ img {
 
 
     transition: 1.5s ease;
-    transform: translateX(calc(var(--order) * 102%));
+    transform: translateX(var(--offset));
+    z-index: calc(-1*var(--order));
 }
 
 .project-left {
@@ -134,6 +137,10 @@ img {
 
 #project-prev {
     right: 0;
+}
+
+#comments {
+    margin-top: 100px;
 }
 
 :root {
