@@ -57,30 +57,41 @@ img {
     border-style: none;
 }
 
+/*Projects panel*/
 #projects {
     display: flex;
     flex-direction: column;
     row-gap: 1em;
+
+    position: relative;
 }
 
 
-#projects-content {
-    display: flex; 
-    column-gap: 1em;  
-    overflow-x: auto;  
-    white-space: nowrap; 
+#projects-container {
+    overflow-x: visible;  
+    position: relative;
+    height: 250px;
 }
 
 .project {
-    white-space: wrap;
     background-color: var(--blueaccent);
-    text-align: justify;
     display: flex;
     flex-direction: row;
-    max-width: 800px;
-    padding: 2em;
     flex-shrink: 0;
+
+    position: absolute;
+    top: 0;
+
+    text-align: justify;
+    padding: 2em;
+    max-width: 800px;
+    height: 200px;
+    white-space: wrap;
     border-radius: 20px;
+
+
+    transition: 1.5s ease;
+    transform: translateX(calc(var(--order) * 102%));
 }
 
 .project-left {
@@ -92,6 +103,38 @@ img {
     flex: 1;
 }
 
+/* Next & previous buttons */
+#project-prev, #project-next {
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    
+    cursor: pointer;
+    width: auto;
+    margin-top: -22px;
+    padding: 16px;
+    color: var(--bluedark);
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    scale: 200%;
+}
+
+#project-prev:hover, #project-next:hover {
+    background-color: var(--greyaccent);
+}
+
+/* Position the "next button" to the right */
+#project-next {
+    left: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+#project-prev {
+    right: 0;
+}
 
 :root {
     --bluedark: #1A1455;

@@ -1,6 +1,7 @@
 {{define "project"}}
+    <div id="projects-container">
     {{range .Projects}}
-    <div class="project">
+    <div class="project fade">
         <div class="project-left">
             <h3 class="project-title">{{  .Name  }}</h3>
             <p class="dates">{{  .Started  }} to {{ .Finished }}</p>
@@ -11,6 +12,9 @@
             <img src={{ .ImageFile}} alt="">
         </div>
     </div>
+    <a id="project-prev" onclick="changeProj(-1)">&#10095;</a>
+    <a id="project-next" onclick="changeProj(1)">&#10094;</a>
     {{end}}
+    </div>
 {{end}}
 
