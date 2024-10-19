@@ -21,6 +21,14 @@ type Project struct {
 	ImageFile   string
 }
 
+type Comment struct {
+	Id        int
+	Commenter string
+	Email     string
+	Content   string
+	Timestamp time.Time
+}
+
 // Initialises the database connection
 func InitDatabase() error {
 	database_url := os.Getenv("DATABASE_URL")
@@ -69,4 +77,30 @@ func GetAllProjects() ([]Project, error) {
 		return projects, err
 	}
 	return projects, nil
+}
+
+// fetches all comments from the database
+func GetAllComment() ([]*Comment, error) {
+	return nil, nil
+}
+
+// returns a single comment, obtained by its id
+func GetCommentById(int) (*Comment, error) {
+	var comment *Comment
+	return comment, nil
+}
+
+// adds a new comment to the database
+func CreateComment(*Comment) error {
+	return nil
+}
+
+// edits an existing comment
+func EditComment(*Comment) error {
+	return nil
+}
+
+// Deletes a given comment by its id
+func DeleteComment(int) error {
+	return nil
 }
