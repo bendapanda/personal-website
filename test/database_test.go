@@ -1,5 +1,13 @@
 package test
 
+/*
+This file contains tests for the database package. To run the tests, first ensure that the
+database is reset correctly by running testdb_setup.sql.
+
+Author: Ben Shirley
+2024
+*/
+
 import (
 	"errors"
 	"os"
@@ -64,7 +72,7 @@ func TestGetCommentByIdBasicFailure(t *testing.T) {
 	if err == nil {
 		t.Error("There should be an error for a non-existent comment")
 	}
-	var expectedType *db.NotInDatabaseError
+	var expectedType *db.DatabaseError
 	if !errors.As(err, &expectedType) {
 		t.Error("The returned error type is not a NotInDatabaseError")
 	}
@@ -153,4 +161,12 @@ func TestCreateCommentBasic(t *testing.T) {
 		t.Error("the list of all comment Ids should contain the id of the comment added")
 	}
 
+}
+
+func TestCreateCommentThatExistsAlready(t *testing.T) {
+	existantComment := db.Comment{Id: 0, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
+	err := db.CreateComment(existantComment)
+	if err == nil {
+		t.Error("The comment already exists")
+	}
 }

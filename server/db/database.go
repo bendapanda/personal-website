@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 	"time"
 
@@ -31,13 +30,12 @@ type Comment struct {
 }
 
 // Error type returned when an object is not found in database
-type NotInDatabaseError struct {
-	id       int
-	location string
+type DatabaseError struct {
+	message string
 }
 
-func (e *NotInDatabaseError) Error() string {
-	return fmt.Sprintf("Object with id %d not found in %s", e.id, e.location)
+func (e *DatabaseError) Error() string {
+	return e.message
 }
 
 // Initialises the database connection
