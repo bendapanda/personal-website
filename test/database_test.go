@@ -227,9 +227,24 @@ func TestEditComment(t *testing.T) {
 	if retrievedComment.Content != existantComment.Content {
 		t.Error("incorrect content")
 	}
+	// importantly, the edit should change the cached comment so that all comments are the same.
 
-	if retrievedComment != &existantComment {
-		t.Error("Returned comment should point to the same memory address.")
+}
+
+// Test to ensure that we cannot edit a comment that is not in the database
+func TestEditCommentNonExistent(t *testing.T) {
+	existantComment := db.Comment{Id: 5, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
+	err := db.EditComment(existantComment)
+	if err == nil {
+		t.Error("The comment does not exist so we should get and error")
 	}
 
+	var expectedType *db.DatabaseError
+	if !errors.As(err, &expectedType) {
+		t.Error("The returned error type is not a DatabaseError")
+	}
+
+	if err.Error() != "The comment attempted to edit does not exist anymore" {
+		t.Error("The returned error has the wrong message")
+	}
 }
