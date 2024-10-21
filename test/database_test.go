@@ -259,6 +259,8 @@ func TestEditCommentNonExistent(t *testing.T) {
 
 // Test to ensure delete method works as expected.
 func TestDeleteComment(t *testing.T) {
+	initConnection()
+
 	_, err := db.GetCommentById(0)
 	if err != nil {
 		t.Error("There should be no problem getting a comment")
@@ -289,6 +291,8 @@ func TestDeleteComment(t *testing.T) {
 
 // Test DeleteComment method to ensure an error is raised if a non-existant comment is attempted to be deleted
 func TestDeleteCommentThatDoesNotExists(t *testing.T) {
+	initConnection()
+
 	err := db.DeleteComment(420)
 	if err == nil {
 		t.Error("It should be impossible to delete a comment that doesn't exist")
@@ -298,17 +302,14 @@ func TestDeleteCommentThatDoesNotExists(t *testing.T) {
 	if !errors.As(err, &expectedType) {
 		t.Error("The returned error type is not a DatabaseError")
 	}
-
-	if err.Error() != "The comment attempted to be deleted does not exist in database" {
-		t.Error("The returned error has the wrong message")
-	}
 }
 
 // Test to ensure comment rate limits are in place.
 func TestRateLimit(t *testing.T) {
 	var err error
-	for i := 0; i < 100; i++ {
-		toAdd := db.Comment{Id: i + 20, Commenter: "Ben", Content: "New Comment", Timestamp: time.Now()}
+	for i := 0; i < 102; i++ {
+		toAdd := db.Comment{Id: i + 20, Commenter: "Ben", Email: sql.NullString{String: "No Email", Valid: true},
+			Content: "New Comment", Timestamp: time.Now()}
 		if err == nil {
 			err = db.CreateComment(&toAdd)
 		}

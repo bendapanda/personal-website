@@ -158,14 +158,16 @@ func GetCommentById(id int) (*Comment, error) {
 func CreateComment(comment *Comment) error {
 	// Allowing unlimited comments per day might overrun my server's capabilities.
 	// I don't expect to be that popular so to prevent spam I am limiting myself to 100 comments per hour.
-	if time.Now().Sub(timeSinceLastReset) > time.Hour*24 {
+	if time.Since(timeSinceLastReset) > time.Hour*24 {
 		commentCount = 0
 		timeSinceLastReset = time.Now()
 	}
+	fmt.Println(commentCount)
 	if commentCount >= 100 {
 		return &DatabaseError{message: "There have been more than 100 comments in the last day. To prevent spam this comment has been disregarded."}
 	}
 
+	// Make sure comment is not in the result set.
 	_, err := GetCommentById(comment.Id)
 	if err == nil {
 		return &DatabaseError{message: fmt.Sprintf("A comment with id %d already exists in the database!", comment.Id)}
@@ -177,13 +179,17 @@ func CreateComment(comment *Comment) error {
 		log.Error(err.Error())
 		return &DatabaseError{message: err.Error()}
 	}
-	id, err := res.LastInsertId()
+	count, err := res.RowsAffected()
 	if err != nil {
 		log.Error(err.Error())
 		return &DatabaseError{message: "Something went wrong adding comment to database"}
 	}
-	log.Info(fmt.Sprintf("added entry with id %d to database", id))
+	if count != 1 {
+		log.Error(fmt.Printf("%d comments reported as being added, not 1", count))
+		return &DatabaseError{message: "Something went wrong adding comment to database"}
+	}
 
+	log.Info(fmt.Sprintf("Added comment with id %d to the database", comment.Id))
 	// The input comment should be added to the cache as well.
 	c.Set(strconv.Itoa(comment.Id), comment, cache.DefaultExpiration)
 	commentCount++
@@ -217,6 +223,21 @@ func EditComment(comment *Comment) error {
 }
 
 // Deletes a given comment by its id
-func DeleteComment(int) error {
+func DeleteComment(id int) error {
+	queryString := "DELETE FROM comments WHERE id = ?"
+	result, err := db.Exec(queryString, id)
+	if err != nil {
+		return &DatabaseError{err.Error()}
+	}
+	numAffected, err := result.RowsAffected()
+	if err != nil {
+		return &DatabaseError{err.Error()}
+	}
+	if numAffected == 0 {
+		return &DatabaseError{"The comment attempted to be deleted does not exist in the database"}
+	}
+
+	c.Delete(strconv.Itoa(id))
+
 	return nil
 }
