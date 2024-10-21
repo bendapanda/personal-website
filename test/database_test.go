@@ -207,3 +207,29 @@ func TestCreateCommentThatExistsAlready(t *testing.T) {
 		t.Error("The returned error has the wrong message")
 	}
 }
+
+// Test to ensure that we can edit a comment
+func TestEditComment(t *testing.T) {
+	existantComment := db.Comment{Id: 0, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
+	err := db.EditComment(existantComment)
+	if err != nil {
+		t.Error("There should be no problem editing this comment")
+	}
+
+	retrievedComment, err := db.GetCommentById(0)
+	if err != nil {
+		t.Error("There should be no problem calling this method.")
+	}
+
+	if retrievedComment.Commenter != existantComment.Commenter {
+		t.Error("incorrect commenter")
+	}
+	if retrievedComment.Content != existantComment.Content {
+		t.Error("incorrect content")
+	}
+
+	if retrievedComment != &existantComment {
+		t.Error("Returned comment should point to the same memory address.")
+	}
+
+}
