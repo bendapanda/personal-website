@@ -4,6 +4,7 @@ import (
 	"os"
 	db "server/server/db"
 	"testing"
+	"time"
 )
 
 func initConnection() {
@@ -28,6 +29,35 @@ func TestGetAllProjectsNumberProjects(t *testing.T) {
 		t.Error("expected project 1, got", first_project.Name)
 	}
 }
+
+// Tests to ensure comments can be retrieved by id
+func TestGetCommentByIdBasicSuccess(t *testing.T) {
+	initConnection()
+
+	comment, err := db.GetCommentById(0)
+	if err != nil {
+		t.Error("There should be no error getting a comment: ", err.Error())
+	}
+
+	// test to ensure all comment fields are as expected
+	if comment.Id != 0 {
+		t.Error("The recieved comment should have id 0")
+	}
+	if comment.Commenter != "test commenter" {
+		t.Error("The recieved comment should be by test commenter")
+	}
+	if comment.Content != "test content" {
+		t.Error("The recieved comment should have content test content")
+	}
+	if comment.Email != "no email" {
+		t.Error("The recieved comment should have no email")
+	}
+	if !comment.Timestamp.Equal(time.Date(2024, 10, 10)) {
+		t.Error("The recieved comment has the wrong date.")
+	}
+}
+
+// test caching for all methods
 
 // Tests to ensure GetAllComments works as expected
 func TestGetAllComments1(t *testing.T) {
