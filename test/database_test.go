@@ -258,6 +258,51 @@ func TestEditCommentNonExistent(t *testing.T) {
 }
 
 // Test to ensure delete method works as expected.
+func TestDeleteComment(t *testing.T) {
+	_, err := db.GetCommentById(0)
+	if err != nil {
+		t.Error("There should be no problem getting a comment")
+	}
+
+	err = db.DeleteComment(0)
+	if err != nil {
+		t.Error("There should be no error deleting a comment that exists")
+	}
+
+	results, err := db.GetAllCommentIds()
+	if err != nil {
+		t.Error("This is a standard call, should be no error")
+	}
+	if len(results) != 1 {
+		t.Error("There should only be one comment")
+	}
+	if results[0] != 1 {
+		t.Error("The only comment in the database should have id 1")
+	}
+
+	_, err = db.GetCommentById(0)
+	if err == nil {
+		t.Error("There is no such comment in the database so we should not be able to retrieve it.")
+	}
+
+}
+
+// Test DeleteComment method to ensure an error is raised if a non-existant comment is attempted to be deleted
+func TestDeleteCommentThatDoesNotExists(t *testing.T) {
+	err := db.DeleteComment(420)
+	if err == nil {
+		t.Error("It should be impossible to delete a comment that doesn't exist")
+	}
+
+	var expectedType *db.DatabaseError
+	if !errors.As(err, &expectedType) {
+		t.Error("The returned error type is not a DatabaseError")
+	}
+
+	if err.Error() != "The comment attempted to be deleted does not exist in database" {
+		t.Error("The returned error has the wrong message")
+	}
+}
 
 // Test to ensure comment rate limits are in place.
 func TestRateLimit(t *testing.T) {
