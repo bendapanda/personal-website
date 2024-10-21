@@ -175,7 +175,28 @@ func CreateComment(comment *Comment) error {
 }
 
 // edits an existing comment
-func EditComment(Comment) error {
+func EditComment(comment *Comment) error {
+	_, err := GetCommentById(comment.Id)
+	if err != nil {
+		return &DatabaseError{message: "The comment attempted to edit does not exist in database"}
+	}
+	queryString := "UPDATE comments " +
+		"SET commenter=?, email=?, content=?, timestamp=? WHERE id=?"
+	res, err := db.Exec(queryString, comment.Commenter, comment.Email, comment.Content, comment.Timestamp, comment.Id)
+	if err != nil {
+		log.Error(err.Error())
+		return &DatabaseError{message: err.Error()}
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		log.Error(err.Error())
+		return &DatabaseError{message: "Something went wrong modifying the comment"}
+	} else {
+		log.Info(fmt.Sprintf("added entry with id %d to database", id))
+	}
+
+	// The input comment should be added to the cache as well.
+	c.Set(strconv.Itoa(comment.Id), comment, cache.DefaultExpiration)
 	return nil
 }
 

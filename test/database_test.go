@@ -219,7 +219,7 @@ func TestCreateCommentThatExistsAlready(t *testing.T) {
 // Test to ensure that we can edit a comment
 func TestEditComment(t *testing.T) {
 	existantComment := db.Comment{Id: 0, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
-	err := db.EditComment(existantComment)
+	err := db.EditComment(&existantComment)
 	if err != nil {
 		t.Error("There should be no problem editing this comment")
 	}
@@ -242,7 +242,7 @@ func TestEditComment(t *testing.T) {
 // Test to ensure that we cannot edit a comment that is not in the database
 func TestEditCommentNonExistent(t *testing.T) {
 	existantComment := db.Comment{Id: 5, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
-	err := db.EditComment(existantComment)
+	err := db.EditComment(&existantComment)
 	if err == nil {
 		t.Error("The comment does not exist so we should get and error")
 	}
@@ -252,7 +252,7 @@ func TestEditCommentNonExistent(t *testing.T) {
 		t.Error("The returned error type is not a DatabaseError")
 	}
 
-	if err.Error() != "The comment attempted to edit does not exist anymore" {
+	if err.Error() != "The comment attempted to edit does not exist in database" {
 		t.Error("The returned error has the wrong message")
 	}
 }
