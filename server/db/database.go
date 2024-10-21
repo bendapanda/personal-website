@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 	"strconv"
 	"time"
@@ -131,6 +132,7 @@ func GetCommentById(id int) (*Comment, error) {
 	// if the comment is in cache we can return it
 	if cachedComment, inCache := c.Get(strconv.Itoa(id)); inCache {
 		commentPointer := cachedComment.(*Comment)
+		log.Info("Loading comment from cache")
 		return commentPointer, nil
 	}
 
@@ -148,7 +150,27 @@ func GetCommentById(id int) (*Comment, error) {
 }
 
 // adds a new comment to the database
-func CreateComment(Comment) error {
+func CreateComment(comment *Comment) error {
+	_, err := GetCommentById(comment.Id)
+	if err == nil {
+		return &DatabaseError{message: fmt.Sprintf("A comment with id %d already exists in the database!", comment.Id)}
+	}
+
+	queryString := "INSERT INTO comments(id, commenter, content, email, timestamp) VALUES (?, ?, ?, ?, ?)"
+	res, err := db.Exec(queryString, comment.Id, comment.Commenter, comment.Content, comment.Email, comment.Timestamp)
+	if err != nil {
+		log.Error(err.Error())
+		return &DatabaseError{message: err.Error()}
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		log.Error(err.Error())
+		return &DatabaseError{message: "Something went wrong adding comment to database"}
+	}
+	log.Info(fmt.Sprintf("added entry with id %d to database", id))
+
+	// The input comment should be added to the cache as well.
+	c.Set(strconv.Itoa(comment.Id), comment, cache.DefaultExpiration)
 	return nil
 }
 

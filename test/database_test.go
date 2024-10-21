@@ -168,7 +168,7 @@ func TestCreateCommentBasic(t *testing.T) {
 
 	commentToAdd := db.Comment{Id: 7, Commenter: "Ben", Email: sql.NullString{String: "test email", Valid: true},
 		Content: "This is a new Comment", Timestamp: time.Now()}
-	err := db.CreateComment(commentToAdd)
+	err := db.CreateComment(&commentToAdd)
 	if err != nil {
 		t.Error("This is a valid usage of the CreateComment method")
 	}
@@ -199,8 +199,9 @@ func TestCreateCommentBasic(t *testing.T) {
 
 // Test to ensure that comments which exist already cannot be created
 func TestCreateCommentThatExistsAlready(t *testing.T) {
-	existantComment := db.Comment{Id: 0, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
-	err := db.CreateComment(existantComment)
+	existantComment := db.Comment{Id: 0, Commenter: "ben", Content: "this comment already exists",
+		Email: sql.NullString{String: "no email", Valid: true}, Timestamp: time.Now()}
+	err := db.CreateComment(&existantComment)
 	if err == nil {
 		t.Error("The comment already exists so we should get and error")
 	}
@@ -262,7 +263,7 @@ func TestRateLimit(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		toAdd := db.Comment{Id: i + 20, Commenter: "Ben", Content: "New Comment", Timestamp: time.Now()}
 		if err == nil {
-			err = db.CreateComment(toAdd)
+			err = db.CreateComment(&toAdd)
 		}
 	}
 
