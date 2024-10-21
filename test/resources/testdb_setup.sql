@@ -21,3 +21,4 @@ CREATE TABLE IF NOT EXISTS comments (
 );
 
 INSERT INTO comments VALUES(0, "test commenter", "test content", "no email", "2024-10-20");
+INSERT INTO comments VALUES(1, "test commenter two", "test content 2", "test email", "2024-12-24");

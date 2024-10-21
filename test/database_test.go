@@ -28,3 +28,28 @@ func TestGetAllProjectsNumberProjects(t *testing.T) {
 		t.Error("expected project 1, got", first_project.Name)
 	}
 }
+
+// Tests to ensure GetAllComments works as expected
+func TestGetAllComments1(t *testing.T) {
+	initConnection()
+
+	comments, err := db.GetAllComments()
+	if err != nil {
+		t.Error("There should be no error when the function is called correctly. Got", err.Error())
+	}
+	if len(comments) != 2 {
+		t.Error("expected 2 comments, got", len(comments))
+	}
+
+	// The comments should be in order of most recent first.
+	comment0 := *comments[0]
+	comment1 := *comments[1]
+	if !comment0.Timestamp.Before(comment1.Timestamp) {
+		t.Error("These comments should ordered with most recent first.")
+	}
+
+	if comment0.Commenter != "test commenter 2" {
+		t.Error("The first comment is not as expected")
+	}
+
+}
