@@ -53,7 +53,7 @@ func TestGetCommentByIdBasicSuccess(t *testing.T) {
 	if comment.Email != "no email" {
 		t.Error("The recieved comment should have no email")
 	}
-	if !comment.Timestamp.Equal(time.Date(2024, 10, 10)) {
+	if !comment.Timestamp.Equal(time.Date(2024, 10, 10, 0, 0, 0, 0, time.UTC)) {
 		t.Error("The recieved comment has the wrong date.")
 	}
 }
@@ -71,6 +71,26 @@ func TestGetCommentByIdBasicFailure(t *testing.T) {
 
 	if err.Error() != "Object with id 3 not found in Comments" {
 		t.Error("The returned error has the wrong message")
+	}
+
+}
+
+// Each time a comment is returned, it should be a pointer to the exact same piece of memory
+func TestGetCommentByIdCaching(t *testing.T) {
+	initConnection()
+
+	comment, err := db.GetCommentById(0)
+	if err != nil {
+		t.Error("Noting should be wrong here")
+	}
+
+	sameComment, err := db.GetCommentById(0)
+	if err != nil {
+		t.Error("Noting should be wrong here")
+	}
+
+	if comment != sameComment {
+		t.Error("These two comments should point to the exact same memory address.")
 	}
 
 }
