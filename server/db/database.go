@@ -3,14 +3,22 @@ package database
 import (
 	"database/sql"
 	"os"
+	"strconv"
 	"time"
 
+	"github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
+const (
+	cacheExparation = 5 * time.Minute
+	cachePurge      = 10 * time.Minute
+)
+
 var db *sql.DB
+var c = cache.New(cacheExparation, cachePurge)
 
 type Project struct {
 	Name        string
@@ -24,7 +32,7 @@ type Project struct {
 type Comment struct {
 	Id        int
 	Commenter string
-	Email     string
+	Email     sql.NullString
 	Content   string
 	Timestamp time.Time
 }
@@ -102,9 +110,22 @@ func GetAllCommentIds() ([]int, error) {
 }
 
 // returns a single comment, obtained by its id
-func GetCommentById(int) (*Comment, error) {
-	var comment *Comment
-	return comment, nil
+func GetCommentById(id int) (*Comment, error) {
+	if cachedComment, inCache := c.Get(strconv.Itoa(id)); inCache {
+		commentPointer := cachedComment.(*Comment)
+		return commentPointer, nil
+	}
+
+	queryString := "SELECT * FROM comments WHERE id = ?"
+	var comment Comment
+	err := db.QueryRow(queryString, id).Scan(&comment.Id, &comment.Commenter, &comment.Content, &comment.Email, &comment.Timestamp)
+	if err != nil {
+		log.Error(err)
+		returnError := DatabaseError{message: err.Error()}
+		return nil, &returnError
+	}
+	c.Set(strconv.Itoa(comment.Id), &comment, cache.DefaultExpiration)
+	return &comment, nil
 }
 
 // adds a new comment to the database

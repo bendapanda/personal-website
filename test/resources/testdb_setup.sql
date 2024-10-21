@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS comments (
     commenter varchar(100) NOT NULL,
     content varchar(2000) NOT NULL,
     email varchar(100),
-    timestamp TIME NOT NULL
+    timestamp date NOT NULL
 );
 
 INSERT INTO comments VALUES(0, "test commenter", "test content", "no email", "2024-10-20");

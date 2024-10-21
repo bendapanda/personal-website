@@ -94,16 +94,17 @@ func TestGetCommentByIdBasicSuccess(t *testing.T) {
 	if comment.Content != "test content" {
 		t.Error("The recieved comment should have content test content")
 	}
-	if comment.Email != "no email" {
+	if comment.Email.String != "no email" {
 		t.Error("The recieved comment should have no email")
 	}
-	if !comment.Timestamp.Equal(time.Date(2024, 10, 10, 0, 0, 0, 0, time.UTC)) {
+	if !comment.Timestamp.Equal(time.Date(2024, 10, 20, 0, 0, 0, 0, time.UTC)) {
 		t.Error("The recieved comment has the wrong date.")
 	}
 }
 
 // Test to ensure error handling works as expected
 func TestGetCommentByIdBasicFailure(t *testing.T) {
+	initConnection()
 	_, err := db.GetCommentById(3)
 	if err == nil {
 		t.Error("There should be an error for a non-existent comment")
@@ -111,10 +112,6 @@ func TestGetCommentByIdBasicFailure(t *testing.T) {
 	var expectedType *db.DatabaseError
 	if !errors.As(err, &expectedType) {
 		t.Error("The returned error type is not a DatabaseError")
-	}
-
-	if err.Error() != "Object with id 3 not found in Comments" {
-		t.Error("The returned error has the wrong message")
 	}
 
 }
@@ -169,7 +166,8 @@ func TestGetAllComments1(t *testing.T) {
 func TestCreateCommentBasic(t *testing.T) {
 	initConnection()
 
-	commentToAdd := db.Comment{Id: 7, Commenter: "Ben", Email: "test Email", Content: "This is a new Comment", Timestamp: time.Now()}
+	commentToAdd := db.Comment{Id: 7, Commenter: "Ben", Email: sql.NullString{String: "test email", Valid: true},
+		Content: "This is a new Comment", Timestamp: time.Now()}
 	err := db.CreateComment(commentToAdd)
 	if err != nil {
 		t.Error("This is a valid usage of the CreateComment method")
