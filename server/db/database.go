@@ -106,11 +106,29 @@ func GetAllProjects() ([]Project, error) {
 
 // fetches all comments from the database
 func GetAllCommentIds() ([]int, error) {
-	return nil, nil
+	queryString := "SELECT id FROM comments ORDER BY timestamp"
+	rows, err := db.Query(queryString)
+	if err != nil {
+		return nil, &DatabaseError{err.Error()}
+	}
+	defer rows.Close()
+
+	var ids []int
+	for rows.Next() {
+		var id int
+		if err := rows.Scan(&id); err != nil {
+			log.Error(err)
+			return nil, &DatabaseError{message: err.Error()}
+		}
+
+		ids = append(ids, id)
+	}
+	return ids, nil
 }
 
 // returns a single comment, obtained by its id
 func GetCommentById(id int) (*Comment, error) {
+	// if the comment is in cache we can return it
 	if cachedComment, inCache := c.Get(strconv.Itoa(id)); inCache {
 		commentPointer := cachedComment.(*Comment)
 		return commentPointer, nil
@@ -124,6 +142,7 @@ func GetCommentById(id int) (*Comment, error) {
 		returnError := DatabaseError{message: err.Error()}
 		return nil, &returnError
 	}
+	// add the comment to cache
 	c.Set(strconv.Itoa(comment.Id), &comment, cache.DefaultExpiration)
 	return &comment, nil
 }

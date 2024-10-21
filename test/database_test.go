@@ -157,7 +157,7 @@ func TestGetAllComments1(t *testing.T) {
 		t.Error("either the id in the returned list is incorrect or something went wrong in GetCommentById")
 	}
 
-	if !comment1.Timestamp.Before(comment0.Timestamp) {
+	if comment1.Timestamp.Before(comment0.Timestamp) {
 		t.Error("comments should be ordered by date")
 	}
 }
