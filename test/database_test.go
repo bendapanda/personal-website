@@ -11,6 +11,7 @@ Author: Ben Shirley
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"os"
 	db "server/server/db"
 	"testing"
@@ -26,24 +27,29 @@ func resetDatabase() {
 	var err error
 	dbInit, err := sql.Open("sqlite3", database_url)
 	if err != nil {
+		fmt.Println("error opening database")
 		panic("something went wrong connecting to database")
 	}
 
 	file, err := os.ReadFile(sqlFilepath)
 	if err != nil {
+		fmt.Println("error reading file")
 		panic(err.Error())
 	}
 	script := string(file)
 
 	_, err = dbInit.Exec(script)
 	if err != nil {
+		fmt.Println("error running script")
 		panic(err.Error())
 	}
+	fmt.Println("database reset successfully")
 	dbInit.Close()
 
 }
 
 func initConnection() {
+	os.Setenv("DATABASE_URL", "resources/test_db.db")
 	resetDatabase()
 	db.InitDatabase()
 }
@@ -73,6 +79,9 @@ func TestGetCommentByIdBasicSuccess(t *testing.T) {
 	comment, err := db.GetCommentById(0)
 	if err != nil {
 		t.Error("There should be no error getting a comment: ", err.Error())
+	}
+	if comment == nil {
+		t.Error("something should be returned.")
 	}
 
 	// test to ensure all comment fields are as expected
@@ -250,3 +259,16 @@ func TestEditCommentNonExistent(t *testing.T) {
 }
 
 // Test to ensure comment rate limits are in place.
+func TestRateLimit(t *testing.T) {
+	var err error
+	for i := 0; i < 100; i++ {
+		toAdd := db.Comment{Id: i + 20, Commenter: "Ben", Content: "New Comment", Timestamp: time.Now()}
+		if err == nil {
+			err = db.CreateComment(toAdd)
+		}
+	}
+
+	if err == nil {
+		t.Error("At some point we should see and error, we need rate limits!")
+	}
+}

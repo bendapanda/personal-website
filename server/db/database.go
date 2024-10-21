@@ -53,6 +53,12 @@ func InitDatabase() error {
 	return nil
 }
 
+func CloseConnection() {
+	if db != nil {
+		db.Close()
+	}
+}
+
 // fetches all projects in the database
 func GetAllProjects() ([]Project, error) {
 	queryString := "SELECT * FROM projects"
@@ -70,6 +76,7 @@ func GetAllProjects() ([]Project, error) {
 		var endTime sql.NullTime
 
 		if err := rows.Scan(&proj.Name, &proj.Description, &proj.URL, &startTime, &endTime, &proj.ImageFile); err != nil {
+			log.Error(err)
 			return projects, err
 		}
 		proj.Started = startTime.Format(time.DateOnly)
@@ -83,6 +90,7 @@ func GetAllProjects() ([]Project, error) {
 	}
 
 	if err = rows.Err(); err != nil {
+		log.Error(err)
 		return projects, err
 	}
 	return projects, nil
