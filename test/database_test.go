@@ -248,3 +248,5 @@ func TestEditCommentNonExistent(t *testing.T) {
 		t.Error("The returned error has the wrong message")
 	}
 }
+
+// Test to ensure comment rate limits are in place.
