@@ -20,6 +20,8 @@ const (
 
 var db *sql.DB
 var c = cache.New(cacheExparation, cachePurge)
+var commentCount int
+var timeSinceLastReset time.Time
 
 type Project struct {
 	Name        string
@@ -59,6 +61,9 @@ func InitDatabase() error {
 	}
 
 	log.Info("Connected to database")
+
+	commentCount = 0
+	timeSinceLastReset = time.Now()
 	return nil
 }
 
@@ -151,6 +156,16 @@ func GetCommentById(id int) (*Comment, error) {
 
 // adds a new comment to the database
 func CreateComment(comment *Comment) error {
+	// Allowing unlimited comments per day might overrun my server's capabilities.
+	// I don't expect to be that popular so to prevent spam I am limiting myself to 100 comments per hour.
+	if time.Now().Sub(timeSinceLastReset) > time.Hour*24 {
+		commentCount = 0
+		timeSinceLastReset = time.Now()
+	}
+	if commentCount >= 100 {
+		return &DatabaseError{message: "There have been more than 100 comments in the last day. To prevent spam this comment has been disregarded."}
+	}
+
 	_, err := GetCommentById(comment.Id)
 	if err == nil {
 		return &DatabaseError{message: fmt.Sprintf("A comment with id %d already exists in the database!", comment.Id)}
@@ -171,6 +186,7 @@ func CreateComment(comment *Comment) error {
 
 	// The input comment should be added to the cache as well.
 	c.Set(strconv.Itoa(comment.Id), comment, cache.DefaultExpiration)
+	commentCount++
 	return nil
 }
 
