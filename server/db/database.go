@@ -102,12 +102,12 @@ func GetCommentById(int) (*Comment, error) {
 }
 
 // adds a new comment to the database
-func CreateComment(*Comment) error {
+func CreateComment(Comment) error {
 	return nil
 }
 
 // edits an existing comment
-func EditComment(*Comment) error {
+func EditComment(Comment) error {
 	return nil
 }
 

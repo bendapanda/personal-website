@@ -92,10 +92,7 @@ func TestGetCommentByIdCaching(t *testing.T) {
 	if comment != sameComment {
 		t.Error("These two comments should point to the exact same memory address.")
 	}
-
 }
-
-// test caching for all methods
 
 // Tests to ensure GetAllCommentIds works as expected
 func TestGetAllComments1(t *testing.T) {
@@ -122,4 +119,38 @@ func TestGetAllComments1(t *testing.T) {
 	if !comment1.Timestamp.Before(comment0.Timestamp) {
 		t.Error("comments should be ordered by date")
 	}
+}
+
+// Test to ensure comments get added to the database as expected.
+func TestCreateCommentBasic(t *testing.T) {
+	initConnection()
+
+	commentToAdd := db.Comment{Id: 7, Commenter: "Ben", Email: "test Email", Content: "This is a new Comment", Timestamp: time.Now()}
+	err := db.CreateComment(commentToAdd)
+	if err != nil {
+		t.Error("This is a valid usage of the CreateComment method")
+	}
+
+	retrievedComment, err := db.GetCommentById(7)
+	if err != nil {
+		t.Error("Nothing should go wrong here")
+	}
+	if retrievedComment != &commentToAdd {
+		t.Error("The recieved comment and the comment we added should share the exact same location in memory")
+	}
+
+	commentIds, err := db.GetAllCommentIds()
+	if err != nil {
+		t.Error("Nothing should go wrong here")
+	}
+	contains := false
+	for _, val := range commentIds {
+		if val == 7 {
+			contains = true
+		}
+	}
+	if !contains {
+		t.Error("the list of all comment Ids should contain the id of the comment added")
+	}
+
 }
