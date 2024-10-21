@@ -1,4 +1,8 @@
 PRAGMA foreign_keys=OFF;
+
+DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS comments;
+
 BEGIN TRANSACTION;
 CREATE TABLE projects (
     name varchar(100) PRIMARY KEY,

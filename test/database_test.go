@@ -9,15 +9,42 @@ Author: Ben Shirley
 */
 
 import (
+	"database/sql"
 	"errors"
 	"os"
 	db "server/server/db"
 	"testing"
 	"time"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
+// helper method that resets the database to the state specified in the helper file
+func resetDatabase() {
+	sqlFilepath := "resources/testdb_setup.sql"
+	database_url := os.Getenv("DATABASE_URL")
+	var err error
+	dbInit, err := sql.Open("sqlite3", database_url)
+	if err != nil {
+		panic("something went wrong connecting to database")
+	}
+
+	file, err := os.ReadFile(sqlFilepath)
+	if err != nil {
+		panic(err.Error())
+	}
+	script := string(file)
+
+	_, err = dbInit.Exec(script)
+	if err != nil {
+		panic(err.Error())
+	}
+	dbInit.Close()
+
+}
+
 func initConnection() {
-	os.Setenv("DATABASE_URL", "resources/test_db.db")
+	resetDatabase()
 	db.InitDatabase()
 }
 
@@ -74,7 +101,7 @@ func TestGetCommentByIdBasicFailure(t *testing.T) {
 	}
 	var expectedType *db.DatabaseError
 	if !errors.As(err, &expectedType) {
-		t.Error("The returned error type is not a NotInDatabaseError")
+		t.Error("The returned error type is not a DatabaseError")
 	}
 
 	if err.Error() != "Object with id 3 not found in Comments" {
@@ -163,10 +190,20 @@ func TestCreateCommentBasic(t *testing.T) {
 
 }
 
+// Test to ensure that comments which exist already cannot be created
 func TestCreateCommentThatExistsAlready(t *testing.T) {
 	existantComment := db.Comment{Id: 0, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
 	err := db.CreateComment(existantComment)
 	if err == nil {
-		t.Error("The comment already exists")
+		t.Error("The comment already exists so we should get and error")
+	}
+
+	var expectedType *db.DatabaseError
+	if !errors.As(err, &expectedType) {
+		t.Error("The returned error type is not a DatabaseError")
+	}
+
+	if err.Error() != "A comment with id 0 already exists in the database!" {
+		t.Error("The returned error has the wrong message")
 	}
 }
