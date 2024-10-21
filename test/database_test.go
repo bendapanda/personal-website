@@ -257,6 +257,8 @@ func TestEditCommentNonExistent(t *testing.T) {
 	}
 }
 
+// Test to ensure delete method works as expected.
+
 // Test to ensure comment rate limits are in place.
 func TestRateLimit(t *testing.T) {
 	var err error
