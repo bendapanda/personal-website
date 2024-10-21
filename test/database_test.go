@@ -1,6 +1,7 @@
 package test
 
 import (
+	"errors"
 	"os"
 	db "server/server/db"
 	"testing"
@@ -55,6 +56,23 @@ func TestGetCommentByIdBasicSuccess(t *testing.T) {
 	if !comment.Timestamp.Equal(time.Date(2024, 10, 10)) {
 		t.Error("The recieved comment has the wrong date.")
 	}
+}
+
+// Test to ensure error handling works as expected
+func TestGetCommentByIdBasicFailure(t *testing.T) {
+	_, err := db.GetCommentById(3)
+	if err == nil {
+		t.Error("There should be an error for a non-existent comment")
+	}
+	var expectedType *db.NotInDatabaseError
+	if !errors.As(err, &expectedType) {
+		t.Error("The returned error type is not a NotInDatabaseError")
+	}
+
+	if err.Error() != "Object with id 3 not found in Comments" {
+		t.Error("The returned error has the wrong message")
+	}
+
 }
 
 // test caching for all methods

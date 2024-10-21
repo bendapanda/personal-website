@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 	"time"
 
@@ -27,6 +28,16 @@ type Comment struct {
 	Email     string
 	Content   string
 	Timestamp time.Time
+}
+
+// Error type returned when an object is not found in database
+type NotInDatabaseError struct {
+	id       int
+	location string
+}
+
+func (e *NotInDatabaseError) Error() string {
+	return fmt.Sprintf("Object with id %d not found in %s", e.id, e.location)
 }
 
 // Initialises the database connection
