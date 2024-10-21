@@ -59,11 +59,11 @@ func TestGetCommentByIdBasicSuccess(t *testing.T) {
 
 // test caching for all methods
 
-// Tests to ensure GetAllComments works as expected
+// Tests to ensure GetAllCommentIds works as expected
 func TestGetAllComments1(t *testing.T) {
 	initConnection()
 
-	comments, err := db.GetAllComments()
+	comments, err := db.GetAllCommentIds()
 	if err != nil {
 		t.Error("There should be no error when the function is called correctly. Got", err.Error())
 	}
@@ -71,15 +71,17 @@ func TestGetAllComments1(t *testing.T) {
 		t.Error("expected 2 comments, got", len(comments))
 	}
 
-	// The comments should be in order of most recent first.
-	comment0 := *comments[0]
-	comment1 := *comments[1]
-	if !comment0.Timestamp.Before(comment1.Timestamp) {
-		t.Error("These comments should ordered with most recent first.")
+	comment0, err := db.GetCommentById(comments[0])
+	if err != nil {
+		t.Error("either the id in the returned list is incorrect or something went wrong in GetCommentById")
 	}
 
-	if comment0.Commenter != "test commenter 2" {
-		t.Error("The first comment is not as expected")
+	comment1, err := db.GetCommentById(comments[1])
+	if err != nil {
+		t.Error("either the id in the returned list is incorrect or something went wrong in GetCommentById")
 	}
 
+	if !comment1.Timestamp.Before(comment0.Timestamp) {
+		t.Error("comments should be ordered by date")
+	}
 }

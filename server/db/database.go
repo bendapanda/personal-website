@@ -80,7 +80,7 @@ func GetAllProjects() ([]Project, error) {
 }
 
 // fetches all comments from the database
-func GetAllComments() ([]*Comment, error) {
+func GetAllCommentIds() ([]int, error) {
 	return nil, nil
 }
 
