@@ -1,3 +1,8 @@
+/**
+Ben Shirley 2024
+This is the handler for /api/projects. Returns a json list containing all the projects stored in the database.
+*/
+
 package handlers
 
 import (
