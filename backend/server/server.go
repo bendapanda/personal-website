@@ -7,6 +7,7 @@ import (
 	handlers "server/server/handlers"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 
 	db "server/server/db"
@@ -37,7 +38,15 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/api/projects", handlers.GetProjects)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders:   []string{"Content-Type"},
+		AllowCredentials: true,
+	})
 
-	log.Fatal(http.ListenAndServe(PORT, router))
+	router.HandleFunc("/api/projects", handlers.GetProjects)
+	handler := c.Handler(router)
+
+	log.Fatal(http.ListenAndServe(PORT, handler))
 }
