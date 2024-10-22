@@ -3,6 +3,7 @@
  * This page is the main homepage of my website - it will be the first thing the user sees.
  */
 import React, { useState, useEffect } from "react";
+import Slider from 'react-slick';
 
 import Project from '../components/Project'
 import { getProjects } from '../services/APIService'
@@ -17,7 +18,7 @@ const Home = () => {
     // method that prompts the server for a list of projects.
     const handleProjects = async () => {
         try {
-            const { result } = await getProjects();
+            const result  = await getProjects();
             setProjects(result);
 
         } catch(error) {
@@ -29,6 +30,14 @@ const Home = () => {
         handleProjects();
     }, []);
 
+    const sliderSettings = {
+        className: "slider",
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1
+    };
 
     return (
         <div id="content">
@@ -53,11 +62,13 @@ const Home = () => {
             </div>
             <div id="projects">
                 <h3 id="projects-header">Favorite Projects</h3>
+                <Slider {...sliderSettings}>
                 {
                     projects.map((project) => {
-                        <Project project={project}/>
+                        return <Project key={project.Name} project={project}/>;
                     })
                 }
+                </Slider>
             </div>
             <div id="comments" class="section">
                 <h3>Leave a review!</h3>

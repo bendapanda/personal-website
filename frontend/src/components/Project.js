@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
+import "../styles/project.css"
 
-const Project = (project) => {
+const Project = ({ project }) => {
     return (
-        <div class="project fade">
+        <div class="project fade" style={{width: 800}}>
             <div class="project-left">
-                <h3 class="project-title">{ project.name }</h3>
-                <p class="dates">{ project.started } to { project.finished }</p>
-                <p class="project-desc">{ project.description }</p>
-                <a href={ project.url }>Project Link</a>
+                <h3 class="project-title">{ project.Name }</h3>
+                <p class="dates">{ project.Started } to { project.Finished }</p>
+                <p class="project-desc">{ project.Description }</p>
+                <a href={ project.Url }>Project Link</a>
             </div>
             <div class="project-right">
-                <img src={ project.imageFile } alt=""/>
+                <img src={ `${process.env.PUBLIC_URL}${project.ImageFile }` } alt=""/>
             </div>
         </div>
 
