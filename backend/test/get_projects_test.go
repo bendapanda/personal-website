@@ -44,5 +44,25 @@ func TestProperUsage1(t *testing.T) {
 	if resultBody[0].Name != "project 1" {
 		t.Errorf("first element in response expected to be project 1, was %s", resultBody[0].Name)
 	}
+}
 
+// Test to ensure non-get requests return 400 error codes
+func TestImproperUsage1(t *testing.T) {
+	initConnection()
+
+	// First, generate request objects
+	req, err := http.NewRequest("PUT", "/api/projects", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	responseRecorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlers.GetProjects)
+
+	// Now, prompt the server for http results.
+	handler.ServeHTTP(responseRecorder, req)
+
+	if status := responseRecorder.Code; status != http.StatusBadRequest {
+		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusBadRequest)
+	}
 }
