@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+
+import Project from '../components/Project'
 
 import "../styles/main.css";
 
 const { PUBLIC_URL } = process.env;
 
 const Home = () => {
+    const [projects, setProjects] = useState([])
+
+
     return (
         <div id="content">
             <div id="about-me">
@@ -28,6 +33,11 @@ const Home = () => {
             </div>
             <div id="projects">
                 <h3 id="projects-header">Favorite Projects</h3>
+                {
+                    projects.map((project) => {
+                        <Project project={project}/>
+                    })
+                }
             </div>
             <div id="comments" class="section">
                 <h3>Leave a review!</h3>
