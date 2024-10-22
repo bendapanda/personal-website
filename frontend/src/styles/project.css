@@ -1,21 +1,4 @@
 /*Projects panel*/
-#projects {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-#projects-header {
-    position: absolute;
-    top: -20%;
-}
-
-
-#projects-container {
-    overflow-x: visible;  
-    position: relative;
-    height: 250px;
-}
 
 .project {
     background-color: var(--blueaccent);
@@ -23,20 +6,12 @@
     flex-direction: row;
     flex-shrink: 0;
 
-    position: absolute;
-    top: 0;
-
     text-align: justify;
     padding: 2em;
     max-width: 800px;
     height: 200px;
     white-space: wrap;
     border-radius: 20px;
-
-
-    transition: 1.5s ease;
-    transform: translateX(var(--offset));
-    z-index: calc(-1*var(--order));
 }
 
 .project-left {
@@ -48,35 +23,14 @@
     flex: 1;
 }
 
-/* Next & previous buttons */
-#project-prev, #project-next {
-    position: absolute;
-    top: 50%;
-    z-index: 10;
-    
-    cursor: pointer;
-    width: auto;
-    margin-top: -22px;
-    padding: 16px;
-    color: var(--bluedark);
-    font-weight: bold;
-    font-size: 18px;
-    transition: 0.6s ease;
-    border-radius: 0 3px 3px 0;
-    user-select: none;
-    scale: 200%;
+.slick-next:before, .slick-prev:before {
+    color: var(--dark);
 }
 
-#project-prev:hover, #project-next:hover {
-    background-color: var(--greyaccent);
+.slick-slide {
+  padding: 0 15px;
 }
 
-/* Position the "next button" to the right */
-#project-next {
-    left: 0;
-    border-radius: 3px 0 0 3px;
-}
-
-#project-prev {
-    right: 0;
+.slick-list {
+  margin: 0 2em;
 }
