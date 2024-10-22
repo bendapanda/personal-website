@@ -34,5 +34,4 @@ func GetProjects(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(jsonEncoding)
-	w.WriteHeader(http.StatusOK)
 }

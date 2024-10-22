@@ -1,13 +1,33 @@
-import React, { useState } from "react";
+/**
+ * Ben Shirley 2024
+ * This page is the main homepage of my website - it will be the first thing the user sees.
+ */
+import React, { useState, useEffect } from "react";
 
 import Project from '../components/Project'
+import { getProjects } from '../services/APIService'
 
 import "../styles/main.css";
 
 const { PUBLIC_URL } = process.env;
 
 const Home = () => {
-    const [projects, setProjects] = useState([])
+    const [projects, setProjects] = useState([]);
+
+    // method that prompts the server for a list of projects.
+    const handleProjects = async () => {
+        try {
+            const { result } = await getProjects();
+            setProjects(result);
+
+        } catch(error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        handleProjects();
+    }, []);
 
 
     return (
