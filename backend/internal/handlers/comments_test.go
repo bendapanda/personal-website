@@ -247,3 +247,32 @@ func TestCreateCommentExtraParameters(t *testing.T) {
 	database.CloseConnection()
 
 }
+
+// Test to ensure that create comment fails if parameters are missing
+func TestCreateCommentMissingParams(t *testing.T) {
+	testutils.InitTestConnection()
+	database.InitDatabase()
+	// set the comment
+	comment := fmt.Sprintf("{Id: 64, Commenter: \"Ben\", Email: \"bensemail\", Timestamp: \"%s\"}",
+		time.Now().String())
+
+	// generate request objects
+	req, err := http.NewRequest("POST", "/api/comments", bytes.NewReader([]byte(comment)))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	responseRecorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(GetComment)
+
+	// Now, prompt the server for http results.
+	handler.ServeHTTP(responseRecorder, req)
+
+	// We expect a 201 response code
+	if status := responseRecorder.Code; status != http.StatusBadRequest {
+		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusBadRequest)
+	}
+
+	database.CloseConnection()
+
+}
