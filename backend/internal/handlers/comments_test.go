@@ -8,6 +8,7 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	database "server/internal/db"
@@ -210,8 +211,37 @@ func TestCreateCommentNoBody(t *testing.T) {
 	handler.ServeHTTP(responseRecorder, req)
 
 	// We expect a 201 response code
-	if status := responseRecorder.Code; status != http.StatusOK {
-		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusOK)
+	if status := responseRecorder.Code; status != http.StatusBadRequest {
+		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusBadRequest)
+	}
+
+	database.CloseConnection()
+
+}
+
+// Test to ensure that create comment fails if extra parameters are given
+func TestCreateCommentExtraParameters(t *testing.T) {
+	testutils.InitTestConnection()
+	database.InitDatabase()
+	// set the comment
+	comment := fmt.Sprintf("{Id: 64, Commenter: \"Ben\", Content: \"test\", Email: \"bensemail\", Timestamp: \"%s\", ExtraParam: \"hi ther\"}",
+		time.Now().String())
+
+	// generate request objects
+	req, err := http.NewRequest("POST", "/api/comments", bytes.NewReader([]byte(comment)))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	responseRecorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(GetComment)
+
+	// Now, prompt the server for http results.
+	handler.ServeHTTP(responseRecorder, req)
+
+	// We expect a 201 response code
+	if status := responseRecorder.Code; status != http.StatusBadRequest {
+		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusBadRequest)
 	}
 
 	database.CloseConnection()
