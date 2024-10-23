@@ -129,3 +129,31 @@ func TestGetCommentNoParameters(t *testing.T) {
 	database.CloseConnection()
 
 }
+
+// Test to ensure we error if no parameters in request
+func TestGetCommentInvalidParameters(t *testing.T) {
+	testutils.InitTestConnection()
+	database.InitDatabase()
+
+	// First, generate request objects
+	req, err := http.NewRequest("GET", "/api/comments", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	query := req.URL.Query()
+	query.Add("id", "20")
+	req.URL.RawQuery = query.Encode()
+
+	responseRecorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(GetComment)
+
+	// Now, prompt the server for http results.
+	handler.ServeHTTP(responseRecorder, req)
+
+	if status := responseRecorder.Code; status != http.StatusBadRequest {
+		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusBadRequest)
+	}
+
+	database.CloseConnection()
+
+}
