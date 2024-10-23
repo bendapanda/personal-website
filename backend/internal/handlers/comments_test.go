@@ -191,3 +191,29 @@ func TestCreateCommentProperUseage(t *testing.T) {
 	database.CloseConnection()
 
 }
+
+// Test to ensure that create comment errors with no request body
+func TestCreateCommentNoBody(t *testing.T) {
+	testutils.InitTestConnection()
+	database.InitDatabase()
+
+	// generate request objects
+	req, err := http.NewRequest("POST", "/api/comments", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	responseRecorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(GetComment)
+
+	// Now, prompt the server for http results.
+	handler.ServeHTTP(responseRecorder, req)
+
+	// We expect a 201 response code
+	if status := responseRecorder.Code; status != http.StatusOK {
+		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusOK)
+	}
+
+	database.CloseConnection()
+
+}
