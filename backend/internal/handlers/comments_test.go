@@ -90,14 +90,40 @@ func TestGetCommentProperUsage1(t *testing.T) {
 	// Now, prompt the server for http results.
 	handler.ServeHTTP(responseRecorder, req)
 
-	if status := responseRecorder.Code; status != http.StatusBadRequest {
-		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusBadRequest)
+	if status := responseRecorder.Code; status != http.StatusOK {
+		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusOK)
 	}
 	var result database.Comment
 	json.Unmarshal(responseRecorder.Body.Bytes(), &result)
 
+	//ensure we get the correct result
 	if result.Id != 0 {
 		t.Errorf("response got incorrect id, expected 0, got %d", result.Id)
+	}
+
+	database.CloseConnection()
+
+}
+
+// Test to ensure we error if no parameters in request
+func TestGetCommentNoParameters(t *testing.T) {
+	testutils.InitTestConnection()
+	database.InitDatabase()
+
+	// First, generate request objects
+	req, err := http.NewRequest("GET", "/api/comments", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	responseRecorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(GetComment)
+
+	// Now, prompt the server for http results.
+	handler.ServeHTTP(responseRecorder, req)
+
+	if status := responseRecorder.Code; status != http.StatusBadRequest {
+		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusBadRequest)
 	}
 
 	database.CloseConnection()
