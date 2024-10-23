@@ -8,7 +8,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	db "server/server/db"
+	db "server/internal/db"
 
 	log "github.com/sirupsen/logrus"
 )

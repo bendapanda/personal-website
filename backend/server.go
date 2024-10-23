@@ -1,17 +1,16 @@
-package main
+package server
 
 import (
 	"net/http"
 	"os"
 
-	handlers "server/server/handlers"
-
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 
-	db "server/server/db"
-	utils "server/server/utils"
+	db "server/internal/db"
+	handlers "server/internal/handlers"
+	utils "server/internal/utils"
 
 	"github.com/joho/godotenv"
 )

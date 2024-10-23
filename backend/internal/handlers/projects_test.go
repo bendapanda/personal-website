@@ -1,30 +1,33 @@
-/*
-Ben Shirley 2024
-This file contains tests for the comment api handlers located at /api/comments/
-*/
-
-package test
+package handlers
 
 import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"server/server/handlers"
 	"testing"
+
+	database "server/internal/db"
+	"server/internal/testutils"
 )
 
-// Tests proper usage
-func TestGetCommentProperUsage1(t *testing.T) {
-	initConnection()
+/**
+Ben Shirley, October 2024
+
+This file contains all the nessicary tests for the GetProjects endpoint in the server.
+*/
+
+func TestProperUsage1(t *testing.T) {
+	testutils.InitTestConnection()
+	database.InitDatabase()
 
 	// First, generate request objects
-	req, err := http.NewRequest("GET", "/api/comments/all", nil)
+	req, err := http.NewRequest("GET", "/api/projects", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(handlers.GetAllCommentIds)
+	handler := http.HandlerFunc(GetProjects)
 
 	// Now, prompt the server for http results.
 	handler.ServeHTTP(responseRecorder, req)
@@ -33,29 +36,31 @@ func TestGetCommentProperUsage1(t *testing.T) {
 		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusOK)
 	}
 
-	var resultBody []int
+	var resultBody []database.Project
 	json.Unmarshal(responseRecorder.Body.Bytes(), &resultBody)
 
 	if len(resultBody) != 2 {
 		t.Errorf("response expected to have length 2, got %d", len(resultBody))
 	}
-	if resultBody[0] != 1 {
-		t.Errorf("first element in response expected to be 1, was %d", resultBody[0])
+	if resultBody[0].Name != "project 1" {
+		t.Errorf("first element in response expected to be project 1, was %s", resultBody[0].Name)
 	}
+	database.CloseConnection()
 }
 
 // Test to ensure non-get requests return 400 error codes
-func TestGetAllCommentsImproperUsage1(t *testing.T) {
-	initConnection()
+func TestProjectsImproperUsage1(t *testing.T) {
+	testutils.InitTestConnection()
+	database.InitDatabase()
 
 	// First, generate request objects
-	req, err := http.NewRequest("PUT", "/api/comments/all", nil)
+	req, err := http.NewRequest("PUT", "/api/projects", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(handlers.GetAllCommentIds)
+	handler := http.HandlerFunc(GetProjects)
 
 	// Now, prompt the server for http results.
 	handler.ServeHTTP(responseRecorder, req)
@@ -63,4 +68,5 @@ func TestGetAllCommentsImproperUsage1(t *testing.T) {
 	if status := responseRecorder.Code; status != http.StatusBadRequest {
 		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusBadRequest)
 	}
+	database.CloseConnection()
 }

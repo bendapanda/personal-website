@@ -3,19 +3,17 @@ Ben Shirley 2024
 This file contains util functions for use in unit tests.
 */
 
-package test
+package testutils
 
 import (
 	"database/sql"
 	"fmt"
 	"os"
-
-	db "server/server/db"
 )
 
 // helper method that resets the database to the state specified in the helper file
 func resetDatabase() {
-	sqlFilepath := "resources/testdb_setup.sql"
+	sqlFilepath := "../../test/resources/testdb_setup.sql"
 	database_url := os.Getenv("DATABASE_URL")
 	var err error
 	dbInit, err := sql.Open("sqlite3", database_url)
@@ -41,8 +39,7 @@ func resetDatabase() {
 
 }
 
-func initConnection() {
-	os.Setenv("DATABASE_URL", "resources/test_db.db")
+func InitTestConnection() {
+	os.Setenv("DATABASE_URL", "../../test/resources/test_db.db")
 	resetDatabase()
-	db.InitDatabase()
 }

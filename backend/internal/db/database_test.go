@@ -1,4 +1,4 @@
-package test
+package database
 
 /*
 This file contains tests for the database package. To run the tests, first ensure that the
@@ -11,18 +11,20 @@ Author: Ben Shirley
 import (
 	"database/sql"
 	"errors"
-	db "server/server/db"
 	"testing"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
+
+	"server/internal/testutils"
 )
 
 // Tests to ensure GetAllProjects returns the correct number of projects
 func TestGetAllProjectsNumberProjects(t *testing.T) {
-	initConnection()
+	testutils.InitTestConnection()
+	InitDatabase()
 
-	projects, err := db.GetAllProjects()
+	projects, err := GetAllProjects()
 	if err != nil {
 		t.Error("we should not get an error here but got: ", err.Error())
 	}
@@ -34,13 +36,16 @@ func TestGetAllProjectsNumberProjects(t *testing.T) {
 	if first_project.Name != "project 1" {
 		t.Error("expected project 1, got", first_project.Name)
 	}
+
+	CloseConnection()
 }
 
 // Tests to ensure comments can be retrieved by id
 func TestGetCommentByIdBasicSuccess(t *testing.T) {
-	initConnection()
+	testutils.InitTestConnection()
+	InitDatabase()
 
-	comment, err := db.GetCommentById(0)
+	comment, err := GetCommentById(0)
 	if err != nil {
 		t.Error("There should be no error getting a comment: ", err.Error())
 	}
@@ -64,32 +69,37 @@ func TestGetCommentByIdBasicSuccess(t *testing.T) {
 	if !comment.Timestamp.Equal(time.Date(2024, 10, 20, 0, 0, 0, 0, time.UTC)) {
 		t.Error("The recieved comment has the wrong date.")
 	}
+	CloseConnection()
 }
 
 // Test to ensure error handling works as expected
 func TestGetCommentByIdBasicFailure(t *testing.T) {
-	initConnection()
-	_, err := db.GetCommentById(3)
+	testutils.InitTestConnection()
+	InitDatabase()
+
+	_, err := GetCommentById(3)
 	if err == nil {
 		t.Error("There should be an error for a non-existent comment")
 	}
-	var expectedType *db.DatabaseError
+	var expectedType *DatabaseError
 	if !errors.As(err, &expectedType) {
 		t.Error("The returned error type is not a DatabaseError")
 	}
 
+	CloseConnection()
 }
 
 // Each time a comment is returned, it should be a pointer to the exact same piece of memory
 func TestGetCommentByIdCaching(t *testing.T) {
-	initConnection()
+	testutils.InitTestConnection()
+	InitDatabase()
 
-	comment, err := db.GetCommentById(0)
+	comment, err := GetCommentById(0)
 	if err != nil {
 		t.Error("Noting should be wrong here")
 	}
 
-	sameComment, err := db.GetCommentById(0)
+	sameComment, err := GetCommentById(0)
 	if err != nil {
 		t.Error("Noting should be wrong here")
 	}
@@ -97,13 +107,15 @@ func TestGetCommentByIdCaching(t *testing.T) {
 	if comment != sameComment {
 		t.Error("These two comments should point to the exact same memory address.")
 	}
+	CloseConnection()
 }
 
 // Tests to ensure GetAllCommentIds works as expected
 func TestGetAllComments1(t *testing.T) {
-	initConnection()
+	testutils.InitTestConnection()
+	InitDatabase()
 
-	comments, err := db.GetAllCommentIds()
+	comments, err := GetAllCommentIds()
 	if err != nil {
 		t.Error("There should be no error when the function is called correctly. Got", err.Error())
 	}
@@ -111,12 +123,12 @@ func TestGetAllComments1(t *testing.T) {
 		t.Error("expected 2 comments, got", len(comments))
 	}
 
-	comment0, err := db.GetCommentById(comments[0])
+	comment0, err := GetCommentById(comments[0])
 	if err != nil {
 		t.Error("either the id in the returned list is incorrect or something went wrong in GetCommentById")
 	}
 
-	comment1, err := db.GetCommentById(comments[1])
+	comment1, err := GetCommentById(comments[1])
 	if err != nil {
 		t.Error("either the id in the returned list is incorrect or something went wrong in GetCommentById")
 	}
@@ -124,20 +136,22 @@ func TestGetAllComments1(t *testing.T) {
 	if comment1.Timestamp.Before(comment0.Timestamp) {
 		t.Error("comments should be ordered by date")
 	}
+	CloseConnection()
 }
 
 // Test to ensure comments get added to the database as expected.
 func TestCreateCommentBasic(t *testing.T) {
-	initConnection()
+	testutils.InitTestConnection()
+	InitDatabase()
 
-	commentToAdd := db.Comment{Id: 7, Commenter: "Ben", Email: sql.NullString{String: "test email", Valid: true},
+	commentToAdd := Comment{Id: 7, Commenter: "Ben", Email: sql.NullString{String: "test email", Valid: true},
 		Content: "This is a new Comment", Timestamp: time.Now()}
-	err := db.CreateComment(&commentToAdd)
+	err := CreateComment(&commentToAdd)
 	if err != nil {
 		t.Error("This is a valid usage of the CreateComment method")
 	}
 
-	retrievedComment, err := db.GetCommentById(7)
+	retrievedComment, err := GetCommentById(7)
 	if err != nil {
 		t.Error("Nothing should go wrong here")
 	}
@@ -145,7 +159,7 @@ func TestCreateCommentBasic(t *testing.T) {
 		t.Error("The recieved comment and the comment we added should share the exact same location in memory")
 	}
 
-	commentIds, err := db.GetAllCommentIds()
+	commentIds, err := GetAllCommentIds()
 	if err != nil {
 		t.Error("Nothing should go wrong here")
 	}
@@ -159,18 +173,22 @@ func TestCreateCommentBasic(t *testing.T) {
 		t.Error("the list of all comment Ids should contain the id of the comment added")
 	}
 
+	CloseConnection()
 }
 
 // Test to ensure that comments which exist already cannot be created
 func TestCreateCommentThatExistsAlready(t *testing.T) {
-	existantComment := db.Comment{Id: 0, Commenter: "ben", Content: "this comment already exists",
+	testutils.InitTestConnection()
+	InitDatabase()
+
+	existantComment := Comment{Id: 0, Commenter: "ben", Content: "this comment already exists",
 		Email: sql.NullString{String: "no email", Valid: true}, Timestamp: time.Now()}
-	err := db.CreateComment(&existantComment)
+	err := CreateComment(&existantComment)
 	if err == nil {
 		t.Error("The comment already exists so we should get and error")
 	}
 
-	var expectedType *db.DatabaseError
+	var expectedType *DatabaseError
 	if !errors.As(err, &expectedType) {
 		t.Error("The returned error type is not a DatabaseError")
 	}
@@ -178,17 +196,21 @@ func TestCreateCommentThatExistsAlready(t *testing.T) {
 	if err.Error() != "A comment with id 0 already exists in the database!" {
 		t.Error("The returned error has the wrong message")
 	}
+	CloseConnection()
 }
 
 // Test to ensure that we can edit a comment
 func TestEditComment(t *testing.T) {
-	existantComment := db.Comment{Id: 0, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
-	err := db.EditComment(&existantComment)
+	testutils.InitTestConnection()
+	InitDatabase()
+
+	existantComment := Comment{Id: 0, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
+	err := EditComment(&existantComment)
 	if err != nil {
 		t.Error("There should be no problem editing this comment")
 	}
 
-	retrievedComment, err := db.GetCommentById(0)
+	retrievedComment, err := GetCommentById(0)
 	if err != nil {
 		t.Error("There should be no problem calling this method.")
 	}
@@ -200,18 +222,22 @@ func TestEditComment(t *testing.T) {
 		t.Error("incorrect content")
 	}
 	// importantly, the edit should change the cached comment so that all comments are the same.
+	CloseConnection()
 
 }
 
 // Test to ensure that we cannot edit a comment that is not in the database
 func TestEditCommentNonExistent(t *testing.T) {
-	existantComment := db.Comment{Id: 5, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
-	err := db.EditComment(&existantComment)
+	testutils.InitTestConnection()
+	InitDatabase()
+
+	existantComment := Comment{Id: 5, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
+	err := EditComment(&existantComment)
 	if err == nil {
 		t.Error("The comment does not exist so we should get and error")
 	}
 
-	var expectedType *db.DatabaseError
+	var expectedType *DatabaseError
 	if !errors.As(err, &expectedType) {
 		t.Error("The returned error type is not a DatabaseError")
 	}
@@ -219,23 +245,25 @@ func TestEditCommentNonExistent(t *testing.T) {
 	if err.Error() != "The comment attempted to edit does not exist in database" {
 		t.Error("The returned error has the wrong message")
 	}
+	CloseConnection()
 }
 
 // Test to ensure delete method works as expected.
 func TestDeleteComment(t *testing.T) {
-	initConnection()
+	testutils.InitTestConnection()
+	InitDatabase()
 
-	_, err := db.GetCommentById(0)
+	_, err := GetCommentById(0)
 	if err != nil {
 		t.Error("There should be no problem getting a comment")
 	}
 
-	err = db.DeleteComment(0)
+	err = DeleteComment(0)
 	if err != nil {
 		t.Error("There should be no error deleting a comment that exists")
 	}
 
-	results, err := db.GetAllCommentIds()
+	results, err := GetAllCommentIds()
 	if err != nil {
 		t.Error("This is a standard call, should be no error")
 	}
@@ -246,40 +274,47 @@ func TestDeleteComment(t *testing.T) {
 		t.Error("The only comment in the database should have id 1")
 	}
 
-	_, err = db.GetCommentById(0)
+	_, err = GetCommentById(0)
 	if err == nil {
 		t.Error("There is no such comment in the database so we should not be able to retrieve it.")
 	}
 
+	CloseConnection()
 }
 
 // Test DeleteComment method to ensure an error is raised if a non-existant comment is attempted to be deleted
 func TestDeleteCommentThatDoesNotExists(t *testing.T) {
-	initConnection()
+	testutils.InitTestConnection()
+	InitDatabase()
 
-	err := db.DeleteComment(420)
+	err := DeleteComment(420)
 	if err == nil {
 		t.Error("It should be impossible to delete a comment that doesn't exist")
 	}
 
-	var expectedType *db.DatabaseError
+	var expectedType *DatabaseError
 	if !errors.As(err, &expectedType) {
 		t.Error("The returned error type is not a DatabaseError")
 	}
+	CloseConnection()
 }
 
 // Test to ensure comment rate limits are in place.
 func TestRateLimit(t *testing.T) {
+	testutils.InitTestConnection()
+	InitDatabase()
+
 	var err error
 	for i := 0; i < 102; i++ {
-		toAdd := db.Comment{Id: i + 20, Commenter: "Ben", Email: sql.NullString{String: "No Email", Valid: true},
+		toAdd := Comment{Id: i + 20, Commenter: "Ben", Email: sql.NullString{String: "No Email", Valid: true},
 			Content: "New Comment", Timestamp: time.Now()}
 		if err == nil {
-			err = db.CreateComment(&toAdd)
+			err = CreateComment(&toAdd)
 		}
 	}
 
 	if err == nil {
 		t.Error("At some point we should see and error, we need rate limits!")
 	}
+	CloseConnection()
 }
