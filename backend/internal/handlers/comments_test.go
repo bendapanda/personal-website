@@ -6,12 +6,14 @@ This file contains tests for the comment api handlers located at /api/comments/
 package handlers
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	database "server/internal/db"
 	"server/internal/testutils"
 	"testing"
+	"time"
 )
 
 // Tests proper usage
@@ -130,7 +132,7 @@ func TestGetCommentNoParameters(t *testing.T) {
 
 }
 
-// Test to ensure we error if no parameters in request
+// Test to ensure we error if invalid request parameters.
 func TestGetCommentInvalidParameters(t *testing.T) {
 	testutils.InitTestConnection()
 	database.InitDatabase()
@@ -152,6 +154,38 @@ func TestGetCommentInvalidParameters(t *testing.T) {
 
 	if status := responseRecorder.Code; status != http.StatusBadRequest {
 		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusBadRequest)
+	}
+
+	database.CloseConnection()
+}
+
+// Test to ensure that create comment adds it to the database
+func TestCreateCommentProperUseage(t *testing.T) {
+	testutils.InitTestConnection()
+	database.InitDatabase()
+	// set the comment
+
+	comment := database.Comment{Id: 40, Commenter: "ben", Content: "hello world", Email: "benshirley@hotmail.com", Timestamp: time.Now()}
+	encoding, err := json.Marshal(comment)
+	if err != nil {
+		t.Error("Something went wrong encoding comment in json.")
+	}
+
+	// generate request objects
+	req, err := http.NewRequest("POST", "/api/comments", bytes.NewReader(encoding))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	responseRecorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(GetComment)
+
+	// Now, prompt the server for http results.
+	handler.ServeHTTP(responseRecorder, req)
+
+	// We expect a 201 response code
+	if status := responseRecorder.Code; status != http.StatusCreated {
+		t.Errorf("response got wrong error code: got %v, expected %v", status, http.StatusCreated)
 	}
 
 	database.CloseConnection()
