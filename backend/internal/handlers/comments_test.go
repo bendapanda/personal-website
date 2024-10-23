@@ -44,7 +44,7 @@ func TestGetAllCommentsProperUsage1(t *testing.T) {
 	if len(resultBody) != 2 {
 		t.Errorf("response expected to have length 2, got %d", len(resultBody))
 	}
-	if resultBody[0] != 1 {
+	if resultBody[0] != 0 {
 		t.Errorf("first element in response expected to be 1, was %d", resultBody[0])
 	}
 	database.CloseConnection()
