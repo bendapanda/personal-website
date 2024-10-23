@@ -9,7 +9,6 @@ Author: Ben Shirley
 */
 
 import (
-	"database/sql"
 	"errors"
 	"testing"
 	"time"
@@ -63,7 +62,7 @@ func TestGetCommentByIdBasicSuccess(t *testing.T) {
 	if comment.Content != "test content" {
 		t.Error("The recieved comment should have content test content")
 	}
-	if comment.Email.String != "no email" {
+	if comment.Email != "no email" {
 		t.Error("The recieved comment should have no email")
 	}
 	if !comment.Timestamp.Equal(time.Date(2024, 10, 20, 0, 0, 0, 0, time.UTC)) {
@@ -144,7 +143,7 @@ func TestCreateCommentBasic(t *testing.T) {
 	testutils.InitTestConnection()
 	InitDatabase()
 
-	commentToAdd := Comment{Id: 7, Commenter: "Ben", Email: sql.NullString{String: "test email", Valid: true},
+	commentToAdd := Comment{Id: 7, Commenter: "Ben", Email: "test email",
 		Content: "This is a new Comment", Timestamp: time.Now()}
 	err := CreateComment(&commentToAdd)
 	if err != nil {
@@ -182,7 +181,7 @@ func TestCreateCommentThatExistsAlready(t *testing.T) {
 	InitDatabase()
 
 	existantComment := Comment{Id: 0, Commenter: "ben", Content: "this comment already exists",
-		Email: sql.NullString{String: "no email", Valid: true}, Timestamp: time.Now()}
+		Email: "no email", Timestamp: time.Now()}
 	err := CreateComment(&existantComment)
 	if err == nil {
 		t.Error("The comment already exists so we should get and error")
@@ -306,7 +305,7 @@ func TestRateLimit(t *testing.T) {
 
 	var err error
 	for i := 0; i < 102; i++ {
-		toAdd := Comment{Id: i + 20, Commenter: "Ben", Email: sql.NullString{String: "No Email", Valid: true},
+		toAdd := Comment{Id: i + 20, Commenter: "Ben", Email: "No Email",
 			Content: "New Comment", Timestamp: time.Now()}
 		if err == nil {
 			err = CreateComment(&toAdd)

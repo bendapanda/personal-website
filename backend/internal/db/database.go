@@ -35,7 +35,7 @@ type Project struct {
 type Comment struct {
 	Id        int
 	Commenter string
-	Email     sql.NullString
+	Email     string
 	Content   string
 	Timestamp time.Time
 }
