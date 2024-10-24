@@ -11,6 +11,8 @@ import (
 	"net/url"
 	database "server/internal/db"
 	"strconv"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // returns a json list of all comment ids
@@ -86,6 +88,37 @@ func GetComment(w http.ResponseWriter, r *http.Request) {
 
 // adds a comment to the database.
 func CreateComment(w http.ResponseWriter, r *http.Request) {
+	log.Info("Creating comment")
+	if r.Method != "POST" {
+		log.Error("something other than POST request made to api/comments found its way to CreateComment")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if r.ContentLength == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+
+	var comment database.Comment
+	err := decoder.Decode(&comment)
+	if err != nil {
+		log.Error("POST body not in comment format")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = database.CreateComment(&comment)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	log.Info("comment added to database")
 
 }
 

@@ -179,7 +179,7 @@ func TestCreateCommentProperUseage(t *testing.T) {
 	}
 
 	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetComment)
+	handler := http.HandlerFunc(CreateComment)
 
 	// Now, prompt the server for http results.
 	handler.ServeHTTP(responseRecorder, req)
@@ -205,7 +205,7 @@ func TestCreateCommentNoBody(t *testing.T) {
 	}
 
 	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetComment)
+	handler := http.HandlerFunc(CreateComment)
 
 	// Now, prompt the server for http results.
 	handler.ServeHTTP(responseRecorder, req)
@@ -234,7 +234,7 @@ func TestCreateCommentExtraParameters(t *testing.T) {
 	}
 
 	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetComment)
+	handler := http.HandlerFunc(CreateComment)
 
 	// Now, prompt the server for http results.
 	handler.ServeHTTP(responseRecorder, req)
@@ -263,7 +263,7 @@ func TestCreateCommentMissingParams(t *testing.T) {
 	}
 
 	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetComment)
+	handler := http.HandlerFunc(CreateComment)
 
 	// Now, prompt the server for http results.
 	handler.ServeHTTP(responseRecorder, req)
