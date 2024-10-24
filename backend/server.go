@@ -45,6 +45,8 @@ func main() {
 	})
 
 	router.HandleFunc("/api/projects", handlers.GetProjects)
+	router.HandleFunc("/api/comments/all", handlers.GetAllCommentIds)
+	router.HandleFunc("/api/comments", handlers.CommentsEndpoint)
 	handler := c.Handler(router)
 
 	log.Fatal(http.ListenAndServe(PORT, handler))

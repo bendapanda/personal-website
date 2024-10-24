@@ -43,6 +43,19 @@ func GetAllCommentIds(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// handles distribution of api requests
+func CommentsEndpoint(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		GetComment(w, r)
+	case "POST":
+		CreateComment(w, r)
+	default:
+		w.WriteHeader(http.StatusNotImplemented)
+	}
+
+}
+
 // returns a single json object containing a comment
 func GetComment(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
