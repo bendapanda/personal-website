@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 
 import "../styles/main.css";
 import ProjectCarousel from "../components/Project";
+import CommentsSection from "../components/Comments";
 
 const { PUBLIC_URL } = process.env;
 
@@ -39,6 +40,7 @@ const Home = () => {
             <div/>
             <div id="comments" class="section">
                 <h3>Leave a review!</h3>
+                <CommentsSection/>
             </div>
         </div>
     </div>

@@ -17,6 +17,7 @@ import (
 
 // returns a json list of all comment ids
 func GetAllCommentIds(w http.ResponseWriter, r *http.Request) {
+	log.Info("fetching all comment ids")
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -27,7 +28,6 @@ func GetAllCommentIds(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
 	encoding, err := json.Marshal(comments)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -40,7 +40,6 @@ func GetAllCommentIds(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
 }
 
 // handles distribution of api requests
@@ -71,6 +70,7 @@ func GetComment(w http.ResponseWriter, r *http.Request) {
 
 	idString := params.Get("id")
 	id, err := strconv.Atoi(idString)
+	log.Infof("Attempting to fetch comment with id %d", id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

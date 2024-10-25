@@ -17,7 +17,7 @@ const ProjectCarousel = () => {
     // method that prompts the server for a list of projects.
     const handleProjects = async () => {
         try {
-            const result  = await getProjects();
+            const result = await getProjects();
             setProjects(result);
 
         } catch(error) {

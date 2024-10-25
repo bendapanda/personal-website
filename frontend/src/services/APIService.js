@@ -41,7 +41,7 @@ export const getCommentIds = async () => {
  * @returns an object representation of the comment
  */
 export const getComment = async (id) => {
-    const url = URL(`${process.env.REACT_APP_API_URL}/api/comments`);
+    const url = new URL(`${process.env.REACT_APP_API_URL}/api/comments`);
     url.searchParams.append("id", id);
 
     const response = await fetch(url)
