@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { getCommentIds, getComment } from "../services/APIService"
-
+import "../styles/Comments.css"
 
 /**
  * Comments section component for my website
@@ -42,7 +42,7 @@ const CommentsSection = () => {
         getCommentsForPage();
     }, [commentIds, page]);
 
-    return (<div> 
+    return (<div className="comment-section"> 
         {
             currentComments.map((comment) => {
                 return <Comment key={comment.Id} comment={comment}/>;
@@ -53,10 +53,12 @@ const CommentsSection = () => {
 
 const Comment = ({ comment }) => {
     return (
-        <div className="comment-container">
-            <p>{comment.Commenter}</p>
-            <p>{comment.Content}</p>
-            <p>{comment.Timestamp}</p>
+        <div className="comment-container section">
+            <div className="comment-info">
+                <h3 className="comment-commenter">{comment.Commenter}</h3>
+                <h4 className="comment-date">{new Date(comment.Timestamp).toDateString()}</h4>
+            </div>
+            <p className="comment-content">{comment.Content}</p>
         </div>
     );
 }

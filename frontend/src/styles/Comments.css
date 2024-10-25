@@ -1,0 +1,31 @@
+.comment-section {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2em;
+    margin-bottom: 2em;
+}
+
+.comment-container {
+    /*background-color: var(--blueaccent);*/
+    /* border-radius: 20px; */
+    padding-left: 2em;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-info {
+    display: flex;
+    flex-direction: row;
+    column-gap: 2%;
+    margin-bottom: 0px;
+    padding: 0px;
+}
+
+.comment-content {
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+.comment-commenter {
+    text-decoration: underline;
+}

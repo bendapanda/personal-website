@@ -56,9 +56,12 @@ img {
     border-style: none;
 }
 
+#projects {
+    margin-top: 20px;
+}
 
 #comments {
-    margin-top: 100px;
+    margin-top: 20px;
 }
 
 :root {

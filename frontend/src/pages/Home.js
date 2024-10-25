@@ -31,18 +31,17 @@ const Home = () => {
                     </div>
                 </div>
                 <div id="photo">
-                    <img src={`${PUBLIC_URL}/resources/profile_pic.jpeg`} alt="a pircure of me" class="section" style={{borderStyle: "none"}}/> 
+                    <img src={`${PUBLIC_URL}/resources/profile_pic.jpeg`} alt="a pircure of me" class="section" style={{padding: "0px"}}/> 
                 </div>
             </div>
             <div id="projects">
                 <h3 id="projects-header">Favorite Projects</h3>
                 <ProjectCarousel />
-            <div/>
-            <div id="comments" class="section">
+            </div>
+            <div id="comments">
                 <h3>Leave a review!</h3>
                 <CommentsSection/>
             </div>
-        </div>
     </div>
     );
 };
