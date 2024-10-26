@@ -56,17 +56,11 @@ img {
 
 #photo {
     flex: 2;
-    border-style: none;
+    margin-right: 5px;
 }
 
-/* #projects {
-    padding: 4%;
-    border-radius: 20px;
-    background-color: var(--blueaccent);
-} */
-
 #comments {
-    margin-top: 20px;
+    margin-top: 4%;
 }
 
 :root {

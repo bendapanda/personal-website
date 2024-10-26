@@ -36,11 +36,11 @@ const Home = () => {
                     <img src={`${PUBLIC_URL}/resources/profile_pic.jpeg`} alt="a pircure of me" class="section" style={{padding: "0px"}}/> 
                 </div>
             </div>
-            <div id="projects">
+            <div id="projects" style={{marginTop: "-4%"}}>
                 <h3 id="projects-header">Favorite Projects</h3>
                 <ProjectCarousel />
             </div>
-            <div id="comments">
+            <div id="comments" className="section">
                 <h3>Leave a review!</h3>
                 <CommentsSection/>
             </div>

@@ -53,7 +53,7 @@ const CommentsSection = () => {
 
 const Comment = ({ comment }) => {
     return (
-        <div className="comment-container section">
+        <div className="comment-container">
             <div className="comment-info">
                 <h3 className="comment-commenter">{comment.Commenter}</h3>
                 <h4 className="comment-date">{new Date(comment.Timestamp).toDateString()}</h4>

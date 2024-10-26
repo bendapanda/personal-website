@@ -6,8 +6,8 @@
 }
 
 .comment-container {
-    /*background-color: var(--blueaccent);*/
-    /* border-radius: 20px; */
+    background-color: var(--blueaccent);
+    border-radius: 20px;
     padding-left: 2em;
     display: flex;
     flex-direction: column;
