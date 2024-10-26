@@ -39,6 +39,8 @@ img {
     display: flex;
     flex-direction: column;
     row-gap: 1em;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
 }
 
 #bio {
@@ -51,14 +53,17 @@ img {
     transform: scale(90%) rotate(-10deg) translateY(-10%) scaleX(110%);
 }
 
+
 #photo {
     flex: 2;
     border-style: none;
 }
 
-#projects {
-    margin-top: 20px;
-}
+/* #projects {
+    padding: 4%;
+    border-radius: 20px;
+    background-color: var(--blueaccent);
+} */
 
 #comments {
     margin-top: 20px;

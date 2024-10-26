@@ -59,7 +59,7 @@ const ProjectCarousel = () => {
 const Project = ({ project }) => {
     return (
         
-        <div class="project">
+        <div class="project section">
             <div class="project-left">
                 <h3 class="project-title">{ project.Name }</h3>
                 <p class="dates">{ project.Started } to { project.Finished }</p>

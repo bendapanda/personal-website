@@ -12,6 +12,8 @@
     align-items: center;
 
     font-size: 20px;
+    background-color: var(--blueaccent);
+    border-radius: 10px;
 }
 
 ul.navbar li {

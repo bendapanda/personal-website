@@ -26,8 +26,10 @@ const Home = () => {
                             and leave a comment for me to review later. You can also email me directly from this webpage.
                         </p>
                     </div>
+                    <div id="silly-me-container">
                     <div id="silly-me">
                         <img src={`${PUBLIC_URL}/resources/ben_lying_down.png`} alt="silly me!"/>
+                    </div>
                     </div>
                 </div>
                 <div id="photo">
