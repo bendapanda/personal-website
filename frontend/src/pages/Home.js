@@ -18,7 +18,7 @@ const Home = () => {
             <div id="about-me">
                 <div id="vert-about-me">
                     <div id="bio" class="section">
-                        <h3>About Me</h3>
+                        <h3 className="header">About Me</h3>
                         <p>Hi there! my name is Ben Shirley and I'm a -year old wannabe software developer.
                             I am just about to complete my BSc in Maths and Computer Science, both of which I love.
                         </p>
@@ -37,11 +37,11 @@ const Home = () => {
                 </div>
             </div>
             <div id="projects" style={{marginTop: "-4%"}}>
-                <h3 id="projects-header">Favorite Projects</h3>
+                <h3 id="projects-header" className="header">Favorite Projects</h3>
                 <ProjectCarousel />
             </div>
             <div id="comments" className="section">
-                <h3>Leave a review!</h3>
+                <h3 className="header">Leave a review!</h3>
                 <CommentsSection/>
             </div>
     </div>

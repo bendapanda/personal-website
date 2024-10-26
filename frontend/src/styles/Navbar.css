@@ -31,6 +31,6 @@ a.navbar-link, a.navbar-link:visited, a.navbar-link:link {
 }
 
 a.navbar-link:hover, a.navbar-link:active {
-    transform: rotate(3deg) scale(1.1);
+    transform: scale(1.1);
     color: darkgray;
 }

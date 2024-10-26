@@ -3,6 +3,7 @@ body {
     font-optical-sizing: auto;
     font-weight: 800;
     font-style: normal;
+    color: var(--dark);
     background-color: var(--whitebackground);
 }
 
@@ -18,6 +19,10 @@ img {
 
     padding-left: 1em;
     padding-right: 1em;
+}
+
+.header {
+    color: var(--bluedark);
 }
 
 #content {
@@ -50,7 +55,7 @@ img {
 
 #silly-me {
     flex: 1;
-    transform: scale(90%) rotate(-10deg) translateY(-10%) scaleX(110%);
+    transform: scale(90%) rotate(-10deg) translateY(-10%) scaleX(110%) translateX(5%);
 }
 
 
