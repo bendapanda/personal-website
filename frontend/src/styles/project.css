@@ -12,6 +12,13 @@
     height: 200px;
     white-space: wrap;
     border-radius: 20px;
+    transition: all .2s ease-in;
+    text-decoration: none;
+    color: inherit;
+}
+
+.project:hover {
+  transform: scale(1.01) translateY(-1em);
 }
 
 .project-left {
@@ -33,4 +40,6 @@
 
 .slick-list {
   margin: 0 2em;
+  overflow: visible;
+  overflow-x: clip;
 }
