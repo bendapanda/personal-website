@@ -11,7 +11,7 @@ import CommentsSection from "../components/Comments";
 const { PUBLIC_URL } = process.env;
 
 const Home = () => {
-    
+    const date = new Date();
 
     return (
         <div id="content">
@@ -19,7 +19,7 @@ const Home = () => {
                 <div id="vert-about-me">
                     <div id="bio" class="section">
                         <h3 className="header">About Me</h3>
-                        <p>Hi there! my name is Ben Shirley and I'm a -year old wannabe software developer.
+                        <p>Hi there! my name is Ben Shirley and I'm a {date.getFullYear() - 2004}-year old wannabe software developer.
                             I am just about to complete my BSc in Maths and Computer Science, both of which I love.
                         </p>
                         <p>This is my personal webpage, built by me! You can check out my projects below,
@@ -33,7 +33,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div id="photo">
-                    <img src={`${PUBLIC_URL}/resources/profile_pic.jpeg`} alt="a pircure of me" class="section" style={{padding: "0px"}}/> 
+                    <img src={`${PUBLIC_URL}/resources/profile_pic.jpeg`} alt="a picture of me" class="section" style={{padding: "0px"}}/> 
                 </div>
             </div>
             <div id="projects" style={{marginTop: "-4%"}}>
