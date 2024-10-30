@@ -29,3 +29,20 @@
 .comment-commenter {
     text-decoration: underline;
 }
+
+#hidden-ben-comments {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+
+    animation-name: hidden-ben-popup;
+    animation-duration: 0.5s;
+
+    transform: translateY(-30%) translateX(100%);
+    clip-path: inset(0 0 70% 0);
+}
+
+@keyframes hidden-ben-popup {
+    0% {  transform: translateY(0%) translateX(100%); clip-path: inset(0 0 100% 0);}
+    100% { transform: translateY(-30%) translateX(100%); clip-path: inset(0 0 70% 0);}
+}
