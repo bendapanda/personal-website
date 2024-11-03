@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { getCommentIds, getComment } from "../services/APIService"
+import { getCommentIds, getComment, postComment } from "../services/APIService"
 import "../styles/Comments.css"
 
 /**
@@ -10,6 +10,7 @@ const CommentsSection = () => {
     const [commentIds, setCommentIds] = useState([]);
     const [currentComments, setCurrentComments] = useState([]);
     const [showHiddenBen, setShowHiddenBen] = useState(false);
+    const [commentPostResponse, setCommentPostResponse] = useState("");
     const commentsPerPage = 5;
 
     useEffect(() => {
@@ -43,12 +44,35 @@ const CommentsSection = () => {
         getCommentsForPage();
     }, [commentIds, page]);
 
+    /**
+     * method to handle the posting of comments 
+     * @param {*} formData the input fields on the form 
+     */
+    function handleComment(formData) {
+        const username = formData.get("username");
+        const content = formData.get("content");
+        const timestamp = Date.UTC();
+
+        postComment(username, content, timestamp).then(response => {
+           setCommentPostResponse(response); 
+        }); 
+
+    }
+
     return (<div className="comment-section"> 
+        <div className="comment-creator">
+            <form onSubmit={handleComment}>
+                <label for="username">username: </label>
+                <input type="text" id="username" name="username"/>
+                <textarea type="text" id="content" name="content"/>
+                <input type="submit" value="Post"/>
+            </form>
+            <div>{commentPostResponse}</div>
+        </div>
         {
             currentComments.map((comment, index) => {
                 // As a fun feature, We add a secret me that appears on hover on the second comment
                 if (index == 1) {
-                    console.log("yep")
                     return (
                         <div style={{position: "relative"}}>
                             {
@@ -67,6 +91,13 @@ const CommentsSection = () => {
     </div>);
 }
 
+
+
+/**
+ *  returns a rendering of one comment object. 
+ * @param comment the comment object to be rendered
+ * @returns 
+ */
 const Comment = ({ comment, layer }) => {
     return (
         <div className="comment-container" style={{position: "relative", zIndex: layer}}>

@@ -11,6 +11,7 @@ import CommentsSection from "../components/Comments";
 const { PUBLIC_URL } = process.env;
 
 const Home = () => {
+    // I was born in early January, so I'm not fussed about my age being a few days out of sync :)
     const date = new Date();
 
     return (

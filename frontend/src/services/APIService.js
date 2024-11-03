@@ -51,3 +51,10 @@ export const getComment = async (id) => {
     const data = await response.json();
     return data
 }
+
+/**
+ * makes a post request to the server, and returns a string message relating to what has gone right/wrong.
+ */
+export const postComment = async (name, content, timestamp) => {
+    return null;
+}
