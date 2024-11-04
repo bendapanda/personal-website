@@ -95,8 +95,6 @@ func GetComment(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
-
 }
 
 // adds a comment to the database.
