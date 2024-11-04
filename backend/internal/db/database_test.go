@@ -10,6 +10,7 @@ Author: Ben Shirley
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 	"time"
 
@@ -44,7 +45,7 @@ func TestGetCommentByIdBasicSuccess(t *testing.T) {
 	testutils.InitTestConnection()
 	InitDatabase()
 
-	comment, err := GetCommentById(0)
+	comment, err := GetCommentById(1)
 	if err != nil {
 		t.Error("There should be no error getting a comment: ", err.Error())
 	}
@@ -53,7 +54,7 @@ func TestGetCommentByIdBasicSuccess(t *testing.T) {
 	}
 
 	// test to ensure all comment fields are as expected
-	if comment.Id != 0 {
+	if comment.Id != 1 {
 		t.Error("The recieved comment should have id 0")
 	}
 	if comment.Commenter != "test commenter" {
@@ -145,17 +146,18 @@ func TestCreateCommentBasic(t *testing.T) {
 
 	commentToAdd := Comment{Id: 7, Commenter: "Ben", Email: "test email",
 		Content: "This is a new Comment", Timestamp: time.Now()}
-	err := CreateComment(&commentToAdd)
+	newId, err := CreateComment(&commentToAdd)
 	if err != nil {
 		t.Error("This is a valid usage of the CreateComment method")
 	}
 
-	retrievedComment, err := GetCommentById(7)
+	retrievedComment, err := GetCommentById(newId)
 	if err != nil {
 		t.Error("Nothing should go wrong here")
 	}
-	if retrievedComment != &commentToAdd {
-		t.Error("The recieved comment and the comment we added should share the exact same location in memory")
+	fmt.Println(retrievedComment.Commenter)
+	if retrievedComment.Commenter != commentToAdd.Commenter {
+		t.Errorf("The recieved comment and the comment we added should have the same fields. got %s, expected %s", retrievedComment.Commenter, commentToAdd.Commenter)
 	}
 
 	commentIds, err := GetAllCommentIds()
@@ -164,7 +166,7 @@ func TestCreateCommentBasic(t *testing.T) {
 	}
 	contains := false
 	for _, val := range commentIds {
-		if val == 7 {
+		if val == newId {
 			contains = true
 		}
 	}
@@ -175,41 +177,18 @@ func TestCreateCommentBasic(t *testing.T) {
 	CloseConnection()
 }
 
-// Test to ensure that comments which exist already cannot be created
-func TestCreateCommentThatExistsAlready(t *testing.T) {
-	testutils.InitTestConnection()
-	InitDatabase()
-
-	existantComment := Comment{Id: 0, Commenter: "ben", Content: "this comment already exists",
-		Email: "no email", Timestamp: time.Now()}
-	err := CreateComment(&existantComment)
-	if err == nil {
-		t.Error("The comment already exists so we should get and error")
-	}
-
-	var expectedType *DatabaseError
-	if !errors.As(err, &expectedType) {
-		t.Error("The returned error type is not a DatabaseError")
-	}
-
-	if err.Error() != "A comment with id 0 already exists in the database!" {
-		t.Error("The returned error has the wrong message")
-	}
-	CloseConnection()
-}
-
 // Test to ensure that we can edit a comment
 func TestEditComment(t *testing.T) {
 	testutils.InitTestConnection()
 	InitDatabase()
 
-	existantComment := Comment{Id: 0, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
+	existantComment := Comment{Id: 1, Commenter: "ben", Content: "this comment already exists", Timestamp: time.Now()}
 	err := EditComment(&existantComment)
 	if err != nil {
 		t.Error("There should be no problem editing this comment")
 	}
 
-	retrievedComment, err := GetCommentById(0)
+	retrievedComment, err := GetCommentById(1)
 	if err != nil {
 		t.Error("There should be no problem calling this method.")
 	}
@@ -252,12 +231,12 @@ func TestDeleteComment(t *testing.T) {
 	testutils.InitTestConnection()
 	InitDatabase()
 
-	_, err := GetCommentById(0)
+	_, err := GetCommentById(1)
 	if err != nil {
 		t.Error("There should be no problem getting a comment")
 	}
 
-	err = DeleteComment(0)
+	err = DeleteComment(1)
 	if err != nil {
 		t.Error("There should be no error deleting a comment that exists")
 	}
@@ -269,8 +248,8 @@ func TestDeleteComment(t *testing.T) {
 	if len(results) != 1 {
 		t.Error("There should only be one comment")
 	}
-	if results[0] != 1 {
-		t.Error("The only comment in the database should have id 1")
+	if results[0] != 2 {
+		t.Error("The only comment in the database should have id 2")
 	}
 
 	_, err = GetCommentById(0)
@@ -308,7 +287,7 @@ func TestRateLimit(t *testing.T) {
 		toAdd := Comment{Id: i + 20, Commenter: "Ben", Email: "No Email",
 			Content: "New Comment", Timestamp: time.Now()}
 		if err == nil {
-			err = CreateComment(&toAdd)
+			_, err = CreateComment(&toAdd)
 		}
 	}
 

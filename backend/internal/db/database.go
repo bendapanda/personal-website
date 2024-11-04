@@ -154,8 +154,9 @@ func GetCommentById(id int) (*Comment, error) {
 	return &comment, nil
 }
 
-// adds a new comment to the database
-func CreateComment(comment *Comment) error {
+// adds a new comment to the database. To avoid api users needing to generate their own ids and risk the occasional clash,
+// this is done automatically. However the input comment will not be modified, so essentially now acts as a copy.
+func CreateComment(comment *Comment) (int, error) {
 	// Allowing unlimited comments per day might overrun my server's capabilities.
 	// I don't expect to be that popular so to prevent spam I am limiting myself to 100 comments per hour.
 	if time.Since(timeSinceLastReset) > time.Hour*24 {
@@ -164,36 +165,36 @@ func CreateComment(comment *Comment) error {
 	}
 	fmt.Println(commentCount)
 	if commentCount >= 100 {
-		return &DatabaseError{message: "There have been more than 100 comments in the last day. To prevent spam this comment has been disregarded."}
+		return -1, &DatabaseError{message: "There have been more than 100 comments in the last day. To prevent spam this comment has been disregarded."}
 	}
 
-	// Make sure comment is not in the result set.
-	_, err := GetCommentById(comment.Id)
-	if err == nil {
-		return &DatabaseError{message: fmt.Sprintf("A comment with id %d already exists in the database!", comment.Id)}
-	}
-
-	queryString := "INSERT INTO comments(id, commenter, content, email, timestamp) VALUES (?, ?, ?, ?, ?)"
-	res, err := db.Exec(queryString, comment.Id, comment.Commenter, comment.Content, comment.Email, comment.Timestamp)
+	queryString := "INSERT INTO comments(commenter, content, email, timestamp) VALUES (?, ?, ?, ?)"
+	res, err := db.Exec(queryString, comment.Commenter, comment.Content, comment.Email, comment.Timestamp)
 	if err != nil {
 		log.Error(err.Error())
-		return &DatabaseError{message: err.Error()}
+		return -1, &DatabaseError{message: err.Error()}
 	}
 	count, err := res.RowsAffected()
 	if err != nil {
 		log.Error(err.Error())
-		return &DatabaseError{message: "Something went wrong adding comment to database"}
+		return -1, &DatabaseError{message: "Something went wrong adding comment to database"}
 	}
 	if count != 1 {
 		log.Error(fmt.Printf("%d comments reported as being added, not 1", count))
-		return &DatabaseError{message: "Something went wrong adding comment to database"}
+		return -1, &DatabaseError{message: "Something went wrong adding comment to database"}
 	}
 
-	log.Info(fmt.Sprintf("Added comment with id %d to the database", comment.Id))
+	// reassign the id of the comment to match the database id
+	commentId, err := res.LastInsertId()
+	if err != nil {
+		return -1, &DatabaseError{message: err.Error()}
+	}
+
+	log.Info(fmt.Sprintf("Added comment with id %d to the database", commentId))
 	// The input comment should be added to the cache as well.
 	c.Set(strconv.Itoa(comment.Id), comment, cache.DefaultExpiration)
 	commentCount++
-	return nil
+	return int(commentId), nil
 }
 
 // edits an existing comment
