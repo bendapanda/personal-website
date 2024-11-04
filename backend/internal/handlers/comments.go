@@ -124,14 +124,14 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = database.CreateComment(&comment)
+	newId, err := database.CreateComment(&comment)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	log.Info("comment added to database")
+	log.Infof("comment added to database with id %d", newId)
 
 }
 

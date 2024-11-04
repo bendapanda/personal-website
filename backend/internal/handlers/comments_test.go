@@ -166,7 +166,7 @@ func TestCreateCommentProperUseage(t *testing.T) {
 	database.InitDatabase()
 	// set the comment
 
-	comment := database.Comment{Id: 40, Commenter: "ben", Content: "hello world", Email: "benshirley@hotmail.com", Timestamp: time.Now()}
+	comment := database.Comment{Commenter: "ben", Content: "hello world", Email: "benshirley@hotmail.com", Timestamp: time.Now()}
 	encoding, err := json.Marshal(comment)
 	if err != nil {
 		t.Error("Something went wrong encoding comment in json.")
@@ -224,7 +224,7 @@ func TestCreateCommentExtraParameters(t *testing.T) {
 	testutils.InitTestConnection()
 	database.InitDatabase()
 	// set the comment
-	comment := fmt.Sprintf("{Id: 64, Commenter: \"Ben\", Content: \"test\", Email: \"bensemail\", Timestamp: \"%s\", ExtraParam: \"hi ther\"}",
+	comment := fmt.Sprintf("{Commenter: \"Ben\", Content: \"test\", Email: \"bensemail\", Timestamp: \"%s\", ExtraParam: \"hi ther\"}",
 		time.Now().String())
 
 	// generate request objects
@@ -253,7 +253,7 @@ func TestCreateCommentMissingParams(t *testing.T) {
 	testutils.InitTestConnection()
 	database.InitDatabase()
 	// set the comment
-	comment := fmt.Sprintf("{Id: 64, Commenter: \"Ben\", Email: \"bensemail\", Timestamp: \"%s\"}",
+	comment := fmt.Sprintf("{Commenter: \"Ben\", Email: \"bensemail\", Timestamp: \"%s\"}",
 		time.Now().String())
 
 	// generate request objects
