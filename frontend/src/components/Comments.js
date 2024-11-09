@@ -107,13 +107,14 @@ const CommentsSection = () => {
         }
         {/* this section handles the pagination and navigation */}
         <div id="comment-navigation">
-            <a onClick={() => {setPage(Math.max(page-1, 1))}} id="comment-navigation-prev">prev</a>
+            <a onClick={() => {setPage(Math.max(page-1, 1))}} style={{cursor: "pointer"}} id="comment-navigation-prev">prev</a>
             {
                 [...Array(Math.ceil(commentIds.length/commentsPerPage)).keys()].map((index) => {
-                    return <div onClick={() => setPage(index+1)}>{index+1}</div>
+                    return <div onClick={() => setPage(index+1)} style={{cursor: "pointer"}}>{index+1}</div>
                 })
             }
-            <a onClick={() => {setPage(Math.min(page+1, Math.ceil(commentIds.length/commentsPerPage)));}} id="comment-navigation-next">next</a>
+            <a onClick={() => {setPage(Math.min(page+1, Math.ceil(commentIds.length/commentsPerPage)));}}
+                style={{cursor: "pointer"}} id="comment-navigation-next">next</a>
         </div>
     </div>);
 }
