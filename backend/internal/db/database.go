@@ -112,7 +112,7 @@ func GetAllProjects() ([]Project, error) {
 
 // fetches all comments from the database
 func GetAllCommentIds() ([]int, error) {
-	queryString := "SELECT id FROM comments ORDER BY timestamp"
+	queryString := "SELECT id FROM comments ORDER BY timestamp DESC"
 	rows, err := db.Query(queryString)
 	if err != nil {
 		return nil, &DatabaseError{err.Error()}
