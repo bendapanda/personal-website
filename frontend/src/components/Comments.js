@@ -52,7 +52,7 @@ const CommentsSection = () => {
         formData.preventDefault();
         const username = formData.target.username.value;
         const content = formData.target.content.value;
-        const timestamp = Date.UTC();
+        const timestamp = new Date().toISOString();
 
         postComment(username, content, timestamp).then(response => {
            setCommentPostResponse(response); 
@@ -89,6 +89,10 @@ const CommentsSection = () => {
                 return <Comment key={comment.Id} comment={comment} layer={0}/>;
             })
         }
+        <div id="comment-navigation">
+            <a onClick={() => {setPage(page+1);}}>next</a>
+            <a onClick={() => {setPage(Math.max(page-1, 1))}}>prev</a>
+        </div>
     </div>);
 }
 

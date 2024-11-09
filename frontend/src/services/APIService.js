@@ -54,6 +54,7 @@ export const getComment = async (id) => {
 
 /**
  * makes a post request to the server, and returns a string message relating to what has gone right/wrong.
+ * timestamp should be in UTC format
  */
 export const postComment = async (name, content, timestamp) => {
     console.log("attempting to post comment")
