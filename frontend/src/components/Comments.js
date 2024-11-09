@@ -49,8 +49,9 @@ const CommentsSection = () => {
      * @param {*} formData the input fields on the form 
      */
     function handleComment(formData) {
-        const username = formData.get("username");
-        const content = formData.get("content");
+        formData.preventDefault();
+        const username = formData.target.username.value;
+        const content = formData.target.content.value;
         const timestamp = Date.UTC();
 
         postComment(username, content, timestamp).then(response => {
@@ -65,7 +66,7 @@ const CommentsSection = () => {
                 <label for="username">username: </label>
                 <input type="text" id="username" name="username"/>
                 <textarea type="text" id="content" name="content"/>
-                <input type="submit" value="Post"/>
+                <input type="submit" value="post"/>
             </form>
             <div>{commentPostResponse}</div>
         </div>

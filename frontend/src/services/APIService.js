@@ -56,5 +56,27 @@ export const getComment = async (id) => {
  * makes a post request to the server, and returns a string message relating to what has gone right/wrong.
  */
 export const postComment = async (name, content, timestamp) => {
-    return null;
+    console.log("attempting to post comment")
+    const url = new URL(`${process.env.REACT_APP_API_URL}/api/comments`);
+
+    const response = await fetch(url, {
+        method: "POST", 
+        body: JSON.stringify({
+            commenter: name,
+            content: content,
+            timestamp: timestamp
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    });
+    if (!(response.status==201)) {
+        if (response.status >= 500) {
+            throw new Error(`HTTP error getting target comment! ${response.status}`);
+        }
+        else {
+            return "something went wrong posting your comment. Please check entered fields.";
+        }
+    }
+    return "Comment posted!"; 
 }
