@@ -6,11 +6,11 @@ import "../styles/Comments.css"
  * Comments section component for my website
  */
 const CommentsSection = () => {
-    const [page, setPage] = useState(1);
-    const [commentIds, setCommentIds] = useState([]);
-    const [currentComments, setCurrentComments] = useState([]);
-    const [showHiddenBen, setShowHiddenBen] = useState(false);
-    const [commentPostResponse, setCommentPostResponse] = useState("");
+    const [page, setPage] = useState(1); // controls pagination
+    const [commentIds, setCommentIds] = useState([]); // the list of comments returned by the database
+    const [currentComments, setCurrentComments] = useState([]); // comments displayed on the current page
+    const [showHiddenBen, setShowHiddenBen] = useState(false); // whether or not a silly me is showing!
+    const [commentPostResponse, setCommentPostResponse] = useState(""); // the status of the last post made
     const commentsPerPage = 5;
 
     useEffect(() => {
@@ -63,10 +63,14 @@ const CommentsSection = () => {
     return (<div className="comment-section"> 
         <div className="comment-creator">
             <form onSubmit={handleComment}>
-                <label for="username">username: </label>
-                <input type="text" id="username" name="username"/>
-                <textarea type="text" id="content" name="content"/>
-                <input type="submit" value="post"/>
+                <div className="comment-creator-row">
+                    <label for="username">username: </label>
+                    <input type="text" id="username" name="username"/>
+                </div>
+                <div className="comment-creator-row">
+                    <textarea type="text" id="comment-content" name="content" style={{flex: 8}} placeholder="your comment here!"/>
+                    <input type="submit" value="post" style={{flex:1}} id="comment-post" class="section"/>
+                </div>
             </form>
             <div>{commentPostResponse}</div>
         </div>
@@ -90,8 +94,8 @@ const CommentsSection = () => {
             })
         }
         <div id="comment-navigation">
-            <a onClick={() => {setPage(page+1);}}>next</a>
-            <a onClick={() => {setPage(Math.max(page-1, 1))}}>prev</a>
+            <a onClick={() => {setPage(Math.max(page-1, 1))}} id="comment-navigation-prev">prev</a>
+            <a onClick={() => {setPage(page+1);}} id="comment-navigation-next">next</a>
         </div>
     </div>);
 }
