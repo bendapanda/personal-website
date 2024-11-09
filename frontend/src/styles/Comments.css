@@ -92,3 +92,9 @@ textarea {
     resize: none;
 }
 
+#comment-navigation {
+    display: flex;
+    flex-direction: row;
+    column-gap: 1em;
+    color: var(--bluedark);
+}

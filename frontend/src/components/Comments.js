@@ -13,15 +13,17 @@ const CommentsSection = () => {
     const [commentPostResponse, setCommentPostResponse] = useState(""); // the status of the last post made
     const commentsPerPage = 5;
 
-    useEffect(() => {
-        const handleGetCommentIds = async () => {
+    // used to get the list of comments from the server. called on page load and posted comment
+    const handleGetCommentIds = async () => {
             try {
                 const result = await getCommentIds();
                 setCommentIds(result);
             } catch(error) {
                 console.error("there was an issue getting the comments: " + error);
             }
-        };
+        }
+
+    useEffect(() => {
         handleGetCommentIds();
     }, []);
 
@@ -40,27 +42,36 @@ const CommentsSection = () => {
                 }
             }
             setCurrentComments(comments);
+            handleGetCommentIds();
         };
         getCommentsForPage();
     }, [commentIds, page]);
 
     /**
-     * method to handle the posting of comments 
+     * method to handle the posting of comments.
      * @param {*} formData the input fields on the form 
      */
     function handleComment(formData) {
         formData.preventDefault();
         const username = formData.target.username.value;
         const content = formData.target.content.value;
+        if (username == "" || content == "" ) {
+            setCommentPostResponse("Please fill out all fields!");
+            return;
+        }
         const timestamp = new Date().toISOString();
 
         postComment(username, content, timestamp).then(response => {
            setCommentPostResponse(response); 
         }); 
 
+        formData.target.content.value = "";
     }
 
+    // The actual content of this module is in 3 sections: posting, comments, navigation
     return (<div className="comment-section"> 
+
+        {/*this section handles the posting of comments*/}
         <div className="comment-creator">
             <form onSubmit={handleComment}>
                 <div className="comment-creator-row">
@@ -74,6 +85,7 @@ const CommentsSection = () => {
             </form>
             <div>{commentPostResponse}</div>
         </div>
+        {/*this section renders the comments that are on the current page*/}
         {
             currentComments.map((comment, index) => {
                 // As a fun feature, We add a secret me that appears on hover on the second comment
@@ -93,13 +105,18 @@ const CommentsSection = () => {
                 return <Comment key={comment.Id} comment={comment} layer={0}/>;
             })
         }
+        {/* this section handles the pagination and navigation */}
         <div id="comment-navigation">
             <a onClick={() => {setPage(Math.max(page-1, 1))}} id="comment-navigation-prev">prev</a>
-            <a onClick={() => {setPage(page+1);}} id="comment-navigation-next">next</a>
+            {
+                [...Array(Math.ceil(commentIds.length/commentsPerPage)).keys()].map((index) => {
+                    return <div onClick={() => setPage(index+1)}>{index+1}</div>
+                })
+            }
+            <a onClick={() => {setPage(Math.min(page+1, Math.ceil(commentIds.length/commentsPerPage)));}} id="comment-navigation-next">next</a>
         </div>
     </div>);
 }
-
 
 
 /**
