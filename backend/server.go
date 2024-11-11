@@ -44,6 +44,11 @@ func main() {
 		AllowCredentials: true,
 	})
 
+	// the server can also provide the files placed in the public directory
+	fileServer := http.FileServer(http.Dir("./public"))
+	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", fileServer))
+
+	// setting the server to pass api requests to the correct locations
 	router.HandleFunc("/api/projects", handlers.GetProjects)
 	router.HandleFunc("/api/comments/all", handlers.GetAllCommentIds)
 	router.HandleFunc("/api/comments", handlers.CommentsEndpoint)

@@ -49,7 +49,7 @@ const ProjectCarousel = () => {
             }
             <div style={{padding: "20px"}}>
             <div class="project">
-                <img src={`${process.env.PUBLIC_URL}/resources/ben_squat_point.png`} style={{maxHeight: "100%", maxWidth: "100%"}}/>
+                <img src={`${process.env.PUBLIC_URL}/resources/ben_squat_point.png`} style={{maxHeight: "101%", maxWidth: "100%"}}/>
             </div>
             </div>
         </Slider>
@@ -66,7 +66,7 @@ const Project = ({ project }) => {
                 <p class="project-desc">{ project.Description }</p>
             </div>
             <div class="project-right">
-                <img src={ `${process.env.PUBLIC_URL}${project.ImageFile }` } alt=""/>
+                <img src={ `${process.env.REACT_APP_API_URL}/public/${project.ImageFile }` } alt=""/>
             </div>
         </a>
     )

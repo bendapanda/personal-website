@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { getCommentIds, getComment, postComment } from "../services/APIService"
 import "../styles/Comments.css"
 
@@ -27,6 +27,7 @@ const CommentsSection = () => {
         handleGetCommentIds();
     }, []);
 
+    // whenever the list of comment ids or the page number is updated, we should re-fetch the relevant comments
     useEffect(() => {
         const getCommentsForPage = async () => {
             const maxCommentsToGet = Math.min(commentIds.length-(page-1)*commentsPerPage,
@@ -42,7 +43,6 @@ const CommentsSection = () => {
                 }
             }
             setCurrentComments(comments);
-            handleGetCommentIds();
         };
         getCommentsForPage();
     }, [commentIds, page]);
@@ -64,6 +64,7 @@ const CommentsSection = () => {
         postComment(username, content, timestamp).then(response => {
            setCommentPostResponse(response); 
         }); 
+        handleGetCommentIds();
 
         formData.target.content.value = "";
     }
