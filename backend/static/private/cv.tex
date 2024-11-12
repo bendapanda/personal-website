@@ -1,0 +1,187 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LaTeX Template: Designer's CV
+%
+% Source: http://www.howtotex.com
+% 
+% Date: March 2012
+%
+% Modified by Lim Lian Tze to support multiple pages using fix provided at
+% http://www.howtotex.com/templates/creating-a-designers-cv-in-latex/
+% Date: November 2014
+% 
+% Modified by Ben Shirley to be his own
+% Date November 2024
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document properties and packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4paper,12pt,final]{memoir}
+
+% misc
+\renewcommand{\familydefault}{bch}	% font
+\pagestyle{empty}					% no pagenumbering
+\setlength{\parindent}{0pt}			% no paragraph indentation
+
+
+% required packages (add your own)
+\usepackage{flowfram}										% column layout
+\usepackage[top=1cm,left=1cm,right=1cm,bottom=1cm]{geometry}% margins
+\usepackage{graphicx}										% figures
+\usepackage{url}											% URLs
+\usepackage[usenames,dvipsnames]{xcolor}					% color
+\usepackage{multicol}										% columns env.
+	\setlength{\multicolsep}{0pt}
+\usepackage{paralist}										% compact lists
+\usepackage{tikz}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Create column layout
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% define length commands
+\setlength{\vcolumnsep}{\baselineskip}
+\setlength{\columnsep}{\vcolumnsep}
+
+% left frame
+\newflowframe{0.2\textwidth}{\textheight}{0pt}{0pt}[left]
+	\newlength{\LeftMainSep}
+	\setlength{\LeftMainSep}{0.2\textwidth}
+	\addtolength{\LeftMainSep}{1\columnsep}
+ 
+% small static frame for the vertical line
+\newstaticframe{1.5pt}{\textheight}{\LeftMainSep}{0pt}
+ 
+% content of the static frame
+\begin{staticcontents}{1}
+\hfill
+\tikz{%
+	\draw[loosely dotted,color=RoyalBlue,line width=1.5pt,yshift=0]
+	(0,0) -- (0,\textheight);}%
+\hfill\mbox{}
+\end{staticcontents}
+ 
+% right frame
+\addtolength{\LeftMainSep}{1.5pt}
+\addtolength{\LeftMainSep}{1\columnsep}
+\newflowframe{0.7\textwidth}{\textheight}{\LeftMainSep}{0pt}[main01]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% define macros (for convience)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Sep}{\vspace{1.5em}}
+\newcommand{\SmallSep}{\vspace{0.5em}}
+
+\newenvironment{AboutMe}
+	{\ignorespaces\textbf{\color{RoyalBlue} About me}}
+	{\Sep\ignorespacesafterend}
+	
+\newcommand{\CVSection}[1]
+	{\Large\textbf{#1}\par
+	\SmallSep\normalsize\normalfont}
+
+\newcommand{\CVItem}[1]
+	{\textbf{\color{RoyalBlue} #1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Begin document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+% Left frame
+%%%%%%%%%%%%%%%%%%%%
+%
+% Upload your own photo using the files menu
+\begin{figure}
+	\hfill
+	\includegraphics[width=\columnwidth]{./static/public/resources/profile_pic.jpeg}
+	\vspace{-7cm}
+\end{figure}
+
+\begin{flushright}\small
+	Benjamin Shirley \\
+	\url{benshirley04@gmail.com}  \\
+	\url{www.website.com} \\
+	(+64) 28 416 2973
+\end{flushright}\normalsize
+\framebreak
+
+
+% Right frame
+%%%%%%%%%%%%%%%%%%%%
+\Huge\bfseries {\color{RoyalBlue} Ben Shirley} \\
+\Large\bfseries  Software Engineer/Mathematician \\
+
+\normalsize\normalfont
+
+% About me
+\begin{AboutMe}
+	I want to work in a job that challenges me to think outside the box, and generate novel solutions to problems.
+	As a software engineer I love taking the things I know, and using them to build solutions to real-world problems. As a mathematician I like 
+	learning new things, analyzing problems, and projects that force me to make insightful observations! I am fast-paced and keen to learn. I like to push
+	myself, and be inspired by the people around me.
+\end{AboutMe}
+
+% Experience
+\CVSection{Experience}
+\CVItem{November 2024 - February 2025, Summer Research Scholar}\\
+This year I was lucky enough to be selected to partake in a summer research program through the University of Auckland.
+I was given an unsolved problem, and essentially tasked with solving it, with guidance from a lecturer at the University.
+This gave me a complete introduction to university-level mathematics research. It was a great exercise in finding unique ways to solve 
+problems.
+\SmallSep
+
+\CVItem{December 2023 - February 2024, Software Intern, Fingermark}\\
+This was a summer internship where I was integrated into a full on software development team, working predominantly in python. It was a fast-paced environment which 
+gave me a chance to see what being a software developer was really like, and 
+was exposed to new technologies, like Docker and Kubernetes. In this short 3-month internship I think I nearly doubled my ability as a developer.
+\Sep
+
+% Education
+\CVSection{Education}
+\CVItem{BSc, Double Major in Mathematics and Computer Science 2022 - 2024}\\
+Software development, Artificial Intelligence, Networks\\
+Analysis, Discrete Mathematics, Computability theory, Groups and Abstract Algebra
+\Sep
+
+% Skills
+\CVSection{Skills}
+\CVItem{Languages}
+\begin{multicols}{3}
+\begin{compactitem}[\color{RoyalBlue}$\circ$]
+	\item Java
+	\item Python
+	\item Go
+	\item React
+	\item C
+	\item SQL
+	\item \ldots
+\end{compactitem}
+\end{multicols}
+\CVItem{Mathematics}
+\begin{multicols}{3}
+\begin{compactitem}[\color{RoyalBlue}$\circ$]
+	\item Computability theory
+	\item Graph theory
+	\item Group theory
+	\item Analysis 
+	\item \ldots
+\end{compactitem}
+\end{multicols}
+
+\Sep 
+
+% References
+\CVSection{References}
+References available upon request.
+
+% You'll need these 3 lines at the end of each page!
+%\clearpage
+%\framebreak
+%\framebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
