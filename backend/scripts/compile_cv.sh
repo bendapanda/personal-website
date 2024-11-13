@@ -9,12 +9,16 @@ inputfile="${1%.*}"
 inputdir=$(dirname "$inputfile")
 outputdir=$2
 
+# compile cv to html privately, then move to public once completed
+make4ht -d "$inputdir" -f html5 "$inputfile.tex" && make4ht -m clean "$inputfile.tex" 
+mv "$inputfile.html" "$outputdir"
+mv "$inputfile.css" "$outputdir"
+rm -r $inputdir/static
+
+
 # compile cv to pdf privately, then move to public once completed
 latexmk -output-directory="$inputdir" "$inputfile.tex" && latexmk -c -output-directory="$inputdir" "$inputfile.tex"
 mv "$inputfile.pdf" "$outputdir"
 
-# compile cv to html privately, then move to public once completed
-pandoc -f latex -t html -o "$inputfile.html" "$inputfile.tex"
-mv "$inputfile.html" "$outputdir"
 
 

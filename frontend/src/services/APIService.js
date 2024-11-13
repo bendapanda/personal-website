@@ -81,3 +81,20 @@ export const postComment = async (name, content, timestamp) => {
     }
     return "Comment posted!"; 
 }
+
+/**
+ * @returns the html content of my cv
+ */
+export const getCv = async() => {
+    console.log("fetching cv")
+    const url = new URL(`${process.env.REACT_APP_API_URL}/api/cv`);
+
+    const response = await fetch(url, {method: "GET" });
+
+    if (!response.status==200) {
+        throw new Error(`Something went wrong fetching resume ${response.status}`);
+    }
+
+    const body = await response.text();
+    return body;
+}

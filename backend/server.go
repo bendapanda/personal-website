@@ -80,6 +80,8 @@ func main() {
 // compiles the cv located in private to a pdf, and also to html
 func updateCV() error {
 	cvPath := "./static/private/cv.tex"
+	// cv.pdf should be able to be accessed from the static file server, but cv.html should not
+	// TODO: fix the scripting to store this file in the correct location
 	cvOutputPath := "./static/public/resources"
 	mkHTMLCmd := exec.Command("/bin/bash", "./scripts/compile_cv.sh", cvPath, cvOutputPath)
 	if err := mkHTMLCmd.Run(); err != nil {

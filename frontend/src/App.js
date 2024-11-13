@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 
 import Home from "./pages/Home"
+import Resume from './pages/Resume';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route exact path='/' element= {<Home />} />
+        <Route exact path="/resume" element= {<Resume/>}/>
       </Routes>
     </Router>
   );
