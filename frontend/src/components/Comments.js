@@ -1,11 +1,13 @@
+/**
+ * Ben Shirley 2024
+ * This component is the entire comments section for my website.
+ */
 import React, { useState, useEffect, useCallback } from "react"
 import { getCommentIds, getComment, postComment } from "../services/api-service"
 import "../styles/comments.css"
 
-/**
- * Comments section component for my website
- */
 const CommentsSection = () => {
+    // A lot of state is needed for this component! I think I could slim it down a bit, but for now it works :)
     const [page, setPage] = useState(1); // controls pagination
     const [commentIds, setCommentIds] = useState([]); // the list of comments returned by the database
     const [currentComments, setCurrentComments] = useState([]); // comments displayed on the current page
@@ -13,7 +15,7 @@ const CommentsSection = () => {
     const [commentPostResponse, setCommentPostResponse] = useState(""); // the status of the last post made
     const commentsPerPage = 5;
 
-    // used to get the list of comments from the server. called on page load and posted comment
+    // used to get the list of comments from the server. called on page load and each time a comment is posted.
     const handleGetCommentIds = async () => {
             try {
                 const result = await getCommentIds();
@@ -110,6 +112,7 @@ const CommentsSection = () => {
         <div id="comment-navigation">
             <a onClick={() => {setPage(Math.max(page-1, 1))}} style={{cursor: "pointer"}} id="comment-navigation-prev">prev</a>
             {
+                // I am also a bit disapointed with how I've done this part as it's hard to understand, but again, it works for now
                 [...Array(Math.ceil(commentIds.length/commentsPerPage)).keys()].map((index) => {
                     return <div onClick={() => setPage(index+1)} style={{cursor: "pointer"}}>{index+1}</div>
                 })
@@ -122,9 +125,9 @@ const CommentsSection = () => {
 
 
 /**
- *  returns a rendering of one comment object. 
+ * A single comment
  * @param comment the comment object to be rendered
- * @returns 
+ * @returns a rendering of one comment object. 
  */
 const Comment = ({ comment, layer }) => {
     return (

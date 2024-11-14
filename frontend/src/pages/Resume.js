@@ -13,7 +13,7 @@ const Resume = () => {
     const [htmlContent, setHtmlContent] = useState(null);
 
     useEffect(() => {
-        // Fetch the HTML from the API
+        // Fetch the HTML from the API. This is done only once on page load
         const fetchHtml = async () => {
             try {
                 const html = await getCv(); 
@@ -26,6 +26,8 @@ const Resume = () => {
         fetchHtml();
     }, []);
 
+    // The auto-generated html sources its image from a local directory,
+    // which won't work here. So after it is loaded we must source my profile manually.
     useEffect(() => {
         const images = document.querySelectorAll("img");
         images.forEach((img, index) => {
@@ -39,7 +41,9 @@ const Resume = () => {
         return <p>Loading...</p>;
     }
 
-
+    // We update the inner html dangerously, which could pose a security issue.
+    // I think it is safe enough as the api address is constant, but it might be worth 
+    // looking into before deployment
     return (
         <div id="resume-container">
             <div id="resume-content">

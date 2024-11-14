@@ -14,6 +14,7 @@ const Home = () => {
     // I was born in early January, so I'm not fussed about my age being a few days out of sync :)
     const date = new Date();
 
+    // This outlines the main content for the page, which the individual components fill in.
     return (
         <div id="content">
             <div id="about-me">
