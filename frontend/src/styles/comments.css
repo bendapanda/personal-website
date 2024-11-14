@@ -1,3 +1,9 @@
+/*
+Ben Shirley 2024
+This file style the Comments component
+*/
+
+/* Overall comment section styling */
 .comment-section {
     display: flex;
     flex-direction: column;
@@ -5,6 +11,7 @@
     margin-bottom: 2em;
 }
 
+/* Styling for an individual comment - with the blue bubbles */
 .comment-container {
     background-color: var(--blueaccent);
     border-radius: 20px;
@@ -13,6 +20,7 @@
     flex-direction: column;
 }
 
+/* coment meta-data, who posted it etc */
 .comment-info {
     display: flex;
     flex-direction: row;
@@ -21,15 +29,19 @@
     padding: 0px;
 }
 
+/*actual comment body*/
 .comment-content {
     margin-top: 0px;
     padding-top: 0px;
 }
 
+/* who made the comment */
 .comment-commenter {
     text-decoration: underline;
 }
 
+/* In the next few sections I animate a 
+secret me, who pops out under the second comment */
 #hidden-ben-comments {
     position: absolute;
     pointer-events: none;
@@ -47,6 +59,8 @@
     100% { transform: translateY(-30%) translateX(100%); clip-path: inset(0 0 70% 0);}
 }
 
+
+/* Styling the create comment section */
 .comment-creator {
     padding-top: 1rem;
     padding-bottom: 2rem;
@@ -92,6 +106,8 @@ textarea {
     resize: none;
 }
 
+
+/* Styling the page navigation at the bottom of the comments section */
 #comment-navigation {
     display: flex;
     flex-direction: row;

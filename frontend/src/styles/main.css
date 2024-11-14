@@ -1,3 +1,10 @@
+/*
+Ben Shirley 2024
+This is the main css file. Contains css that is relevant to every component
+*/
+
+
+/* Set font and default coloring */
 body {
     font-family: "poppins-thin", monospace;
     font-optical-sizing: auto;
@@ -11,6 +18,8 @@ img {
     max-width: 100%;
 }
 
+/* An element with a section class generally contains text. 
+These are the black bordered "sections" of the website */
 .section {
     border-style: solid;
     border-color: var(--dark);
@@ -25,6 +34,7 @@ img {
     color: var(--bluedark);
 }
 
+/* Styling for the main page body - brings it in line with navbar */
 #content {
     margin: 5%;
     margin-top: 2%;
@@ -32,6 +42,7 @@ img {
     flex-direction: column;
 }
 
+/* styles the relevant section on the homepage */
 #about-me {
     display: flex;
     flex-direction: row;
@@ -39,7 +50,8 @@ img {
     border-style: none;
 }
 
-#vert-about-me {
+/* container div for about-me section. Contains bio and silly-me */
+#bio-main {
     flex: 3;
     display: flex;
     flex-direction: column;
@@ -48,26 +60,30 @@ img {
     margin-bottom: 0px;
 }
 
+/* secondary container for about-me section */
 #bio {
     flex: 1;
     text-align: justify;
 }
 
+/* The glorious image of me lying down */
 #silly-me {
     flex: 1;
     transform: scale(90%) rotate(-10deg) translateY(-10%) scaleX(110%) translateX(5%);
 }
 
-
+/* my profile picture */
 #photo {
     flex: 2;
     margin-right: 6px;
 }
 
+/* comments section - just adjusting separation here*/
 #comments {
     margin-top: 4%;
 }
 
+/* defining global color-palate */
 :root {
     --bluedark: #1A1455;
     --blueaccent: #add8e6;

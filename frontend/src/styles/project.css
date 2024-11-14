@@ -1,5 +1,10 @@
-/*Projects panel*/
+/*
+Ben Shirley, 2024
+Styling for the Projects panel component. There is not too much to do here,
+as a lot of this is covered by the react-slick dependency.
+*/
 
+/* The styling here is for each individual project */
 .project {
     background-color: var(--blueaccent);
     display: flex;
@@ -17,10 +22,12 @@
     color: inherit;
 }
 
+/* on-hover animation */
 .project:hover {
   transform: scale(1.01) translateY(-1em);
 }
 
+/* projects are divided into an info and an image section. */
 .project-left {
     padding-right: 1em;
     flex: 2;
@@ -30,6 +37,7 @@
     flex: 1;
 }
 
+/* some funky stuff is needed to overide react-slick defaults*/
 .slick-next:before, .slick-prev:before {
     color: var(--dark);
 }

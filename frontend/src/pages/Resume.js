@@ -4,10 +4,10 @@
  */
 import React, { useState, useEffect } from "react";
 
-import { getCv } from "../services/APIService";
+import { getCv } from "../services/api-service";
 
 import "../styles/main.css";
-import "../styles/Resume.css";
+import "../styles/resume.css";
 
 const Resume = () => {
     const [htmlContent, setHtmlContent] = useState(null);

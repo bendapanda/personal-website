@@ -17,7 +17,7 @@ const Home = () => {
     return (
         <div id="content">
             <div id="about-me">
-                <div id="vert-about-me">
+                <div id="bio-main">
                     <div id="bio" class="section">
                         <h3 className="header">About Me</h3>
                         <p>Hi there! my name is Ben Shirley and I'm a {date.getFullYear() - 2004}-year old wannabe software developer.

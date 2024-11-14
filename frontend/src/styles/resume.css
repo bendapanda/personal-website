@@ -1,4 +1,12 @@
+/*
+Ben Shirley 2024
+This page contains the styling for my cv.
+It is auto-generated content, so it's a bit disappointing that I need to do this really, 
+and it will be a bit of a pain should I ever do a big cv re-design, but 
+the actual styling here is pretty minor.
+*/
 
+/* This first section only styles the environment around the resume*/
 #resume-container {
     display: flex;
     flex-direction: row;
@@ -14,6 +22,7 @@
     flex: 5;
 }
 
+/* Here is where the auto-generated content itself needs to be modified */
 #resume-content > div{
     display: flex;
     flex-direction: row;

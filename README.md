@@ -34,3 +34,5 @@ I think it would be cool to have a login system for the comments section, as thi
 their own comments.
 
 I would like to add a "fun-zone" to show off the other cool projects that I have!
+
+Probably most importantly, this site is not designed with mobile users in mind at all! I definitely need to add a mobile view.

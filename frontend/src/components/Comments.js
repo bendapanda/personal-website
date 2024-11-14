@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react"
-import { getCommentIds, getComment, postComment } from "../services/APIService"
-import "../styles/Comments.css"
+import { getCommentIds, getComment, postComment } from "../services/api-service"
+import "../styles/comments.css"
 
 /**
  * Comments section component for my website

@@ -9,7 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import "../styles/project.css"
-import { getProjects } from "../services/APIService"
+import { getProjects } from "../services/api-service"
 
 const ProjectCarousel = () => {
     const [projects, setProjects] = useState([]);
