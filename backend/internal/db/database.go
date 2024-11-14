@@ -51,7 +51,7 @@ func (e *DatabaseError) Error() string {
 
 // Initialises the database connection
 func InitDatabase() error {
-	database_url := os.Getenv("DATABASE_URL")
+	database_url := os.Getenv("DATABASE_DIR")
 	log.Info(database_url)
 	var err error
 	db, err = sql.Open("sqlite3", database_url)

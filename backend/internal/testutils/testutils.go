@@ -14,7 +14,7 @@ import (
 // helper method that resets the database to the state specified in the helper file
 func resetDatabase() {
 	sqlFilepath := "../../test/resources/testdb_setup.sql"
-	database_url := os.Getenv("DATABASE_URL")
+	database_url := os.Getenv("DATABASE_DIR")
 	var err error
 	dbInit, err := sql.Open("sqlite3", database_url)
 	if err != nil {
@@ -40,6 +40,6 @@ func resetDatabase() {
 }
 
 func InitTestConnection() {
-	os.Setenv("DATABASE_URL", "../../test/resources/test_db.db")
+	os.Setenv("DATABASE_DIR", "../../test/resources/test_db.db")
 	resetDatabase()
 }
